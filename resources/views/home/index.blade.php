@@ -9,15 +9,14 @@
 
                 <div class="panel-body">
 
-
                     <div class="row">
 
                         <div class="col-sm-6">
-                            @include('home.checkout')
+                            @include('home.partials.checkout')
                         </div>
 
                         <div class="col-sm-6">
-                            @include('home.absence')
+                            @include('home.partials.absence')
                         </div>
 
                     </div>
@@ -34,7 +33,7 @@
 
                 <div class="panel-body">
 
-                    @include('home.checkin')
+                    @include('home.partials.checkin')
 
                 </div>
             </div>

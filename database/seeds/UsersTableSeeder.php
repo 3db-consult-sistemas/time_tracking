@@ -31,8 +31,7 @@ class UsersTableSeeder extends Seeder
 
         $user = factory(App\User::class)->create([
             'name'  => 'Regular User',
-            'email' => 'user@3dbconsult.com',
-            'role'  => 'user'
+            'email' => 'user@3dbconsult.com'
         ]);
     }
 }
