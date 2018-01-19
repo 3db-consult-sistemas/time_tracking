@@ -19,7 +19,7 @@
     <div id="absenceOptions" class="panel-collapse collapse">
         <div class="form-group form-inline">
             <label>Duranción (minutos):</label>
-            <input name="absenceTime" type="number" class="form-control" min="0" max="100">
+            <input name="absenceTime" type="number" class="form-control" min="5" max="540">
         </div>
 
         <div class="form-group">

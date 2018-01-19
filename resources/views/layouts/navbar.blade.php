@@ -17,11 +17,13 @@
         </div>
 
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
-            <!-- Left Side Of Navbar
+            <!-- Left Side Of Navbar-->
             <ul class="nav navbar-nav">
-                &nbsp;
+                @auth
+                    <li><a href="/entries">Entries</a></li>
+                    <li><a href="/help">Help</a></li>
+                @endauth
             </ul>
-            -->
 
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right">
@@ -29,7 +31,6 @@
                 @guest
                     <li><a href="{{ route('login') }}">Login</a></li>
                 @else
-                    <li><a href="/help">Help</a></li>
                     <li>
                         <a href="{{ route('logout') }}"
                             onclick="event.preventDefault();
