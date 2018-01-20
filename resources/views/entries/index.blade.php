@@ -36,7 +36,7 @@
                                     <td>{{ $entry->date }}</td>
                                     <td>{{ $entry->time_in }}</td>
                                     <td>{{ $entry->time_out }}</td>
-                                    <td>{{ gmdate("H:i:s", $entry->secs)  }}</td>
+                                    <td>{{ formatSeconds($entry->secs)  }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

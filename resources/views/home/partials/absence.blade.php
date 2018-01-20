@@ -9,6 +9,10 @@
     </div>
 
     <div class="form-group">
+        <textarea name="comment" class="form-control" style="resize:none" rows="3" autocomplete="off" placeholder="Comentarios..."></textarea>
+    </div>
+
+    <div class="form-group">
         <div class="checkbox">
             <label data-toggle="collapse" data-target="#absenceOptions">
                 <input type="checkbox"/> Ausencia programada
@@ -21,12 +25,6 @@
             <label>Duranción (minutos):</label>
             <input name="absenceTime" type="number" class="form-control" min="5" max="540">
         </div>
-
-        <div class="form-group">
-            <textarea name="comment" class="form-control" style="resize:none" rows="3" autocomplete="off" placeholder="Comentarios..."></textarea>
-        </div>
     </div>
-
-
 
 </form>

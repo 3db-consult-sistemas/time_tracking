@@ -17,9 +17,9 @@ class TimeEntriesTableSeeder extends Seeder
     {
         $faker = Faker::create();
         $users = User::all();
-        $startDate = Carbon::now()->subDay(7);
+        $startDate = Carbon::now()->subDay(10);
 
-        for ($i=1; $i <= 7; $i++) {
+        for ($i=1; $i <= 10; $i++) {
             foreach ($users as $user) {
                 $date = $startDate->copy()->addDay($i)->format('Y-m-d');
 
