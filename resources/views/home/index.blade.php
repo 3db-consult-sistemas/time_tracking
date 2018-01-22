@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 <div class="container">
 
     @if ($status['code'] == 'close')
@@ -40,7 +39,43 @@
             </div>
         </div>
 
+    @elseif  ($status['code'] == 'absence')
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Dashboard</div>
+                    <div class="panel-body">
+                        <div class="row">
+
+                            <div class="col-sm-6">
+                                @include('home.partials.checkout')
+                            </div>
+
+                            <div class="col-sm-6">
+                                @include('home.partials.absence_finish')
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+     @elseif ($status['code'] == 'absence-planned')
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Dashboard</div>
+
+                    <div class="panel-body">
+                        @include('home.partials.absence_planned')
+                    </div>
+                </div>
+            </div>
+        </div>
+
     @endif
+
 
     <div class="row">
         <div class="col-md-10 col-md-offset-1 hidden-xs">

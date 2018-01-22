@@ -29,8 +29,7 @@ class TimeEntryController extends Controller
     /**
      * Store a time entry resource (check in).
      *
-     * @param  TimeEntriesRequest  $request
-     * @return Response
+     * @return redirect
      */
     public function checkIn()
     {
@@ -50,8 +49,8 @@ class TimeEntryController extends Controller
     /**
      * Update a time entry resource (check out).
      *
-     * @param  TimeEntriesRequest  $request
-     * @return Response
+     * @param  $entryId
+     * @return redirect
      */
     public function checkOut($entryId)
     {
@@ -63,6 +62,46 @@ class TimeEntryController extends Controller
 
         return redirect()->route('home');
     }
+
+    /**
+     * Close current entry and create a absence time entry.
+     *
+     * @param  $entryId
+     * @return redirect
+     */
+    public function absence($entryId)
+    {
+        $data = [
+            'entry' => $entryId,
+            'user_id' => auth()->id(),
+            'type' => 'ausencia'
+        ];
+
+        $this->timeEntryRepository->absence($data);
+
+        return redirect()->route('home');
+    }
+
+    public function absenceFinish($entryId)
+    {
+        $data = [
+            'entry' => $entryId,
+            'user_id' => auth()->id(),
+            'type' => 'ordinaria'
+        ];
+
+        $this->timeEntryRepository->absence($data);
+
+        return redirect()->route('home');
+    }
+
+    public function absenceCancel($entryId)
+    {
+        $this->timeEntryRepository->absenceCancel($entryId);
+
+        return redirect()->route('home');
+    }
+
 
 
 

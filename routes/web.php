@@ -30,3 +30,6 @@ Route::get('/entries', 'TimeEntryController@index');
 
 Route::post('/check-in', 'TimeEntryController@checkIn');
 Route::patch('/check-out/{entryId}', 'TimeEntryController@checkOut');
+Route::post('/absence/{entryId}', 'TimeEntryController@absence');
+Route::post('/absence-finish/{entryId}', 'TimeEntryController@absenceFinish');
+Route::post('/absence-planned/{entryId}', 'TimeEntryController@absenceCancel');

@@ -33,10 +33,19 @@ class HomeController extends Controller
 
         $active = $this->timeEntryRepository->active(auth()->id());
 
-        $status = [
-            'code' => $active != null ? 'open' : 'close',
-            'activeId' => $active != null ? $active->id : null
-        ];
+        $status = [ 'code' => 'close', 'activeId' => null ];
+
+        if ($active != null) {
+
+            if ($active->check_out != null) {
+                $code = 'absence-planned';
+            }
+            else {
+                $code = $active->type == 'ausencia' ? 'absence' : 'open';
+            }
+
+            $status = [ 'code' => $code, 'activeId' => $active->id ];
+        }
 
         return view('home.index', compact('entries', 'status'));
     }

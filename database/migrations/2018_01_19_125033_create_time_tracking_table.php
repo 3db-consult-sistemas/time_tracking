@@ -16,7 +16,7 @@ class CreateTimeTrackingTable extends Migration
         Schema::create('time_entries', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->enum('type', ['ordinaria', 'ausencia']);
+            $table->enum('type', ['ordinaria', 'ausencia'])->default('ordinaria');
             $table->datetime('check_in');
             $table->datetime('check_out')->nullable();
             $table->string('comments')->nullable();

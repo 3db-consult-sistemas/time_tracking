@@ -30,7 +30,11 @@ class TimeEntryRepository
     {
         $query = $this->getModel()
             ->whereNull('check_out')
-            ->select('id', 'user_id');
+            ->orWhere(function ($query) {
+                $now = Carbon::now();
+                $query->where('check_in', '<=', $now)->where('check_out', '>=', $now)
+                    ->where('type', 'ausencia');
+            });
 
         return $userId != null
 			? $query->where('user_id', $userId)->first()
@@ -62,6 +66,40 @@ class TimeEntryRepository
 			->where('id', $id)
 			->update(['check_out' => Carbon::now()]);
     }
+
+
+    public function absence($data)
+    {
+        $now = Carbon::now();
+        $data['check_in'] = $now;
+
+        return DB::transaction(function () use ($now, $data) {
+            DB::table('time_entries')
+                ->where('id', $data['entry'])
+                ->update(['check_out' => $now]);
+
+            unset($data['entry']);
+            DB::table('time_entries')->insert($data);
+        });
+    }
+
+    public function absenceCancel($id)
+    {
+        $now = Carbon::now();
+
+        return DB::transaction(function () use ($now, $id) {
+            DB::table('time_entries')
+                ->where('id', $id)
+                ->update(['check_out' => $now]);
+
+            DB::table('time_entries')->insert([
+                'user_id' => auth()->id(),
+                'check_in' => $now
+            ]);
+        });
+    }
+
+
 
 
 

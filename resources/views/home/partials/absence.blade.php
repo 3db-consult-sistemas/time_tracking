@@ -1,5 +1,4 @@
-<form method="POST" action="/absence">
-
+<form method="POST" action="{{ url('/absence/' . $status['activeId']) }}">
     {{ csrf_field() }}
 
     <div class="form-group">
