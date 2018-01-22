@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\TimeEntry;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Model\TimeEntry\TimeEntry;
+use Illuminate\Support\Facades\Auth;
 
 class TimeEntryController extends Controller
 {

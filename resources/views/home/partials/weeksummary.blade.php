@@ -3,7 +3,6 @@
     $total = 0;
     $totalEstimate = 0;
     $totalDiff = 0;
-    $temp = 29000;
     ?>
 
     <thead>
@@ -21,15 +20,15 @@
             <tr>
                 <?php
                 $total += $entry->secs;
-                $totalEstimate += $temp;
-                $diff = $entry->secs - $temp;
+                $totalEstimate += $entry->hoursToWork;
+                $diff = $entry->secs - $entry->hoursToWork;
                 $totalDiff += $diff;
                 ?>
 
-                <td>{{ date('l', strtotime($entry->date)) }}</td>
-                <td>{{ $entry->date }}</td>
+                <td>{{ date('l', strtotime($entry->_date)) }}</td>
+                <td>{{ $entry->_date }}</td>
                 <td>{{ formatSeconds($entry->secs) }}</td>
-                <td>{{ formatSeconds($temp) }}</td>
+                <td>{{ formatSeconds($entry->hoursToWork) }}</td>
                 <td class="{{ $diff < 0 ? 'danger' : 'success' }}">{{ formatSeconds($diff) }}</td>
             </tr>
         @endforeach

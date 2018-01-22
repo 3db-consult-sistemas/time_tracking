@@ -1,10 +1,11 @@
 <?php
 
 use App\User;
-use App\TimeEntry;
+
 use Carbon\Carbon;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
+use App\Model\TimeEntry\TimeEntry;
 
 class TimeEntriesTableSeeder extends Seeder
 {

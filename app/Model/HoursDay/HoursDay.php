@@ -1,17 +1,17 @@
 <?php
 
-namespace App;
+namespace App\Model\HoursDay;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TimeEntry extends Model
+class HoursDay extends Model
 {
     /**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
-    protected $table = 'time_entries';
+    protected $table = 'hours_day';
 
     /**
 	 * Indicates if the model should be timestamped.
@@ -24,7 +24,7 @@ class TimeEntry extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'check_in', 'check_out', 'type', 'comments'
+        'user_id', 'from_date', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'
     ];
 
     /**
@@ -32,6 +32,6 @@ class TimeEntry extends Model
      *
      * @var array
      */
-    protected $dates = ['check_in', 'check_out'];
+    protected $dates = ['from_date'];
 
 }
