@@ -8,18 +8,67 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\TimeEntry\TimeEntry;
 use Illuminate\Support\Facades\Auth;
+use App\Model\TimeEntry\TimeEntryRepository;
 
 class TimeEntryController extends Controller
 {
+    protected $timeEntryRepository;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(TimeEntryRepository $timeEntryRepository)
     {
+        $this->timeEntryRepository = $timeEntryRepository;
+
         $this->middleware('auth');
     }
+
+    /**
+     * Store a time entry resource (check in).
+     *
+     * @param  TimeEntriesRequest  $request
+     * @return Response
+     */
+    public function checkIn()
+    {
+        $data = [
+            'user_id' => auth()->id()
+        ];
+
+        if(! $this->timeEntryRepository->create($data)) {
+            return redirect()
+                ->route('home')
+                ->withErrors('status', 'No se ha podido realizar el Check-In.');
+		}
+
+        return redirect()->route('home');
+    }
+
+    /**
+     * Update a time entry resource (check out).
+     *
+     * @param  TimeEntriesRequest  $request
+     * @return Response
+     */
+    public function checkOut($entryId)
+    {
+        if(! $this->timeEntryRepository->close($entryId)) {
+            return redirect()
+                ->route('home')
+                ->withErrors('status', 'No se ha podido realizar el Check-Out.');
+		}
+
+        return redirect()->route('home');
+    }
+
+
+
+
+
+
 
     /**
      * Show the application dashboard.

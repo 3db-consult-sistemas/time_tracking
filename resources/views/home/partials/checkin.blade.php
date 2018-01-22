@@ -1,5 +1,4 @@
-<form method="POST" action="/checkIn">
-
+<form method="POST" action="/check-in">
     {{ csrf_field() }}
 
     <div class="form-group">

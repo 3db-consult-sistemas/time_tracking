@@ -4,10 +4,68 @@ namespace App\Model\TimeEntry;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Model\TimeEntry\TimeEntry;
 use Illuminate\Database\Eloquent\Model;
 
 class TimeEntryRepository
 {
+	/**
+	 * Instantiate a repository's model.
+	 *
+	 * @return TimeEntry
+	 */
+	public function getModel()
+	{
+		return new TimeEntry;
+    }
+
+
+    /**
+     * Get the active entries.
+     *
+     * @param $id
+     * @return void
+     */
+    public function active($userId = null)
+    {
+        $query = $this->getModel()
+            ->whereNull('check_out')
+            ->select('id', 'user_id');
+
+        return $userId != null
+			? $query->where('user_id', $userId)->first()
+			: $query->get();
+    }
+
+    /**
+     * Check In.
+     *
+     * @param $data
+     * @return boolean
+     */
+    public function create($data)
+    {
+        $data['check_in'] = Carbon::now();
+
+        return $this->getModel()->create($data);
+    }
+
+    /**
+     * Check Out.
+     *
+     * @param $id   TimeEntry id
+     * @return boolean
+     */
+    public function close($id)
+    {
+ 		return $this->getModel()
+			->where('id', $id)
+			->update(['check_out' => Carbon::now()]);
+    }
+
+
+
+
     /**
      * Fetch data.
      *

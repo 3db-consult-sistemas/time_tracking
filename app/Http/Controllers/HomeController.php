@@ -8,6 +8,8 @@ use App\Model\TimeEntry\TimeEntryRepository;
 
 class HomeController extends Controller
 {
+    protected $timeEntryRepository;
+
     /**
      * Create a new controller instance.
      *
@@ -29,6 +31,13 @@ class HomeController extends Controller
     {
         $entries = $this->timeEntryRepository->fetch('groupByDay');
 
-        return view('home.index', compact('entries'));
+        $active = $this->timeEntryRepository->active(auth()->id());
+
+        $status = [
+            'code' => $active != null ? 'open' : 'close',
+            'activeId' => $active != null ? $active->id : null
+        ];
+
+        return view('home.index', compact('entries', 'status'));
     }
 }

@@ -28,3 +28,5 @@ Route::get('/help', 'HelpController@index')->name('help');
 Route::get('/entries', 'TimeEntryController@index');
 
 
+Route::post('/check-in', 'TimeEntryController@checkIn');
+Route::patch('/check-out/{entryId}', 'TimeEntryController@checkOut');
