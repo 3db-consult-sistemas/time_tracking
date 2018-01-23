@@ -17,9 +17,6 @@
 
                 <div class="panel-body">
 
-                <input type="datetime-local" name="bdaytime">
-
-
                     @if ($status['code'] == 'close')
                         @include('home.partials.checkin')
 

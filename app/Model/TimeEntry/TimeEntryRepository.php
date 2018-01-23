@@ -32,8 +32,7 @@ class TimeEntryRepository
             ->whereNull('check_out')
             ->orWhere(function ($query) {
                 $now = Carbon::now();
-                $query->where('check_in', '<=', $now)->where('check_out', '>', $now)
-                    ->where('type', 'ausencia');
+                $query->where('check_out', '>', $now)->where('type', 'ausencia');
             });
 
         return $userId != null
@@ -68,22 +67,32 @@ class TimeEntryRepository
     }
 
     /**
-     * Actualizo los registros de entrada cunado se abre, cierra o cancela una ausencia.
+     * Actualizo los registros de entrada cuando se abre, cierra o cancela una ausencia.
      *
      * @param $data
      * @return boolean
      */
     public function absence($data)
     {
-        $data['check_in'] = Carbon::now();
+        $now = Carbon::now();
+
+        $data['check_in'] = is_numeric($data['duration']) && $data['check_in'] != null
+            ? $data['check_in']
+            : $now;
+
         $data['check_out'] = is_numeric($data['duration'])
             ? $data['check_in']->copy()->addMinutes($data['duration'])
             : null;
 
-        return DB::transaction(function () use ($data) {
+        $entry = $this->getModel()->where('id', $data['id'])->first();
 
+        if ($entry->check_in > $data['check_in']) {
+            return $entry->delete();
+        }
+
+        return DB::transaction(function () use ($now, $data) {
             DB::table('time_entries')->where('id', $data['id'])->update([
-                'check_out' => $data['check_in']
+                'check_out' => $now
             ]);
 
             unset($data['id']);

@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 
+
 use Carbon\Carbon;
+use App\HelpersTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Model\TimeEntry\TimeEntry;
 use Illuminate\Support\Facades\Auth;
-use App\Model\TimeEntry\TimeEntryRepository;
 use Illuminate\Support\Facades\Validator;
+use App\Model\TimeEntry\TimeEntryRepository;
 
 class TimeEntryController extends Controller
 {
+    use HelpersTrait;
+
     protected $timeEntryRepository;
 
     /**
@@ -75,16 +79,29 @@ class TimeEntryController extends Controller
         $validator = Validator::make($request->all(), [
             'action' => 'required|in:open,close,cancel',
             'comments' => 'string|nullable',
-            'duration' => 'numeric'
+            'from' => 'date_format:"Y-m-d H:i"|after:now|nullable',
+            'duration' => 'numeric|min:5|max:540'
         ]);
 
         if ($validator->fails()) {
-			return redirect()->route('home')->withErrors($validator->errors());
+            return redirect()->route('home')->withInput()->withErrors($validator->errors());
         }
 
         if ($request['action'] == 'cancel' &&
             $this->timeEntryRepository->active(auth()->id()) == null) {
-            return redirect()->route('home')->withErrors('Ausencia programada finalizada, no se puede cancelar.');
+            return redirect()
+                ->route('home')
+                ->withErrors('Ausencia programada finalizada, no se puede cancelar.');
+        }
+
+        if (($dateTime = $this->dateToCarbon($request['from'])) != null) {
+            if ($dateTime <= Carbon::now()->addMinute(10)) {
+                return redirect()
+                    ->route('home')
+                    ->withInput()
+                    ->withErrors('La fecha y hora programada debe ser al menos 10 minutos superior a la actual.');
+            }
+            $request['from'] = $dateTime;
         }
 
         $type = $request['action'] == 'close' || $request['action'] == 'cancel'
@@ -96,6 +113,7 @@ class TimeEntryController extends Controller
             'user_id' => auth()->id(),
             'type' => $type,
             'comments' => $request['comments'],
+            'check_in' => isset($request['planned']) ? $request['from'] : null,
             'duration' => isset($request['planned']) ? $request['duration'] : null
         ]);
 
