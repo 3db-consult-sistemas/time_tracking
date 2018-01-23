@@ -19,9 +19,9 @@ class TimeEntryRepository
 		return new TimeEntry;
     }
 
-
     /**
-     * Get the active entries.
+     * Obtengo los registros activos comprobando que el campo 'check_out' este a null o la
+     * fecha actual se encuetre entre 'check_in' y 'check_out',
      *
      * @param $id
      * @return void
@@ -32,7 +32,7 @@ class TimeEntryRepository
             ->whereNull('check_out')
             ->orWhere(function ($query) {
                 $now = Carbon::now();
-                $query->where('check_in', '<=', $now)->where('check_out', '>=', $now)
+                $query->where('check_in', '<=', $now)->where('check_out', '>', $now)
                     ->where('type', 'ausencia');
             });
 
@@ -42,7 +42,7 @@ class TimeEntryRepository
     }
 
     /**
-     * Check In.
+     * Realizo el 'check in' para el usuario logeado.
      *
      * @param $data
      * @return boolean
@@ -55,9 +55,9 @@ class TimeEntryRepository
     }
 
     /**
-     * Check Out.
+     * Realizo el 'check out' para el usuario logeado.
      *
-     * @param $id   TimeEntry id
+     * @param $id
      * @return boolean
      */
     public function close($id)
@@ -67,37 +67,33 @@ class TimeEntryRepository
 			->update(['check_out' => Carbon::now()]);
     }
 
-
+    /**
+     * Actualizo los registros de entrada cunado se abre, cierra o cancela una ausencia.
+     *
+     * @param $data
+     * @return boolean
+     */
     public function absence($data)
     {
-        $now = Carbon::now();
-        $data['check_in'] = $now;
+        $data['check_in'] = Carbon::now();
+        $data['check_out'] = is_numeric($data['duration'])
+            ? $data['check_in']->copy()->addMinutes($data['duration'])
+            : null;
 
-        return DB::transaction(function () use ($now, $data) {
-            DB::table('time_entries')
-                ->where('id', $data['entry'])
-                ->update(['check_out' => $now]);
+        return DB::transaction(function () use ($data) {
 
-            unset($data['entry']);
+            DB::table('time_entries')->where('id', $data['id'])->update([
+                'check_out' => $data['check_in']
+            ]);
+
+            unset($data['id']);
+            unset($data['duration']);
+
             DB::table('time_entries')->insert($data);
         });
     }
 
-    public function absenceCancel($id)
-    {
-        $now = Carbon::now();
 
-        return DB::transaction(function () use ($now, $id) {
-            DB::table('time_entries')
-                ->where('id', $id)
-                ->update(['check_out' => $now]);
-
-            DB::table('time_entries')->insert([
-                'user_id' => auth()->id(),
-                'check_in' => $now
-            ]);
-        });
-    }
 
 
 

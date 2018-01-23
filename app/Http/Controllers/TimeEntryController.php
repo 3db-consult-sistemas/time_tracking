@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Model\TimeEntry\TimeEntry;
 use Illuminate\Support\Facades\Auth;
 use App\Model\TimeEntry\TimeEntryRepository;
+use Illuminate\Support\Facades\Validator;
 
 class TimeEntryController extends Controller
 {
@@ -27,7 +28,7 @@ class TimeEntryController extends Controller
     }
 
     /**
-     * Store a time entry resource (check in).
+     * Realizo el 'check in' para el usuario autenticado.
      *
      * @return redirect
      */
@@ -47,7 +48,7 @@ class TimeEntryController extends Controller
     }
 
     /**
-     * Update a time entry resource (check out).
+     * Realizo el 'check out' para el usuario autenticado.
      *
      * @param  $entryId
      * @return redirect
@@ -64,40 +65,39 @@ class TimeEntryController extends Controller
     }
 
     /**
-     * Close current entry and create a absence time entry.
+     * Create or finish absence time entry.
      *
      * @param  $entryId
      * @return redirect
      */
-    public function absence($entryId)
+    public function absence(Request $request, $entryId)
     {
-        $data = [
-            'entry' => $entryId,
+        $validator = Validator::make($request->all(), [
+            'action' => 'required|in:open,close,cancel',
+            'comments' => 'string|nullable',
+            'duration' => 'numeric'
+        ]);
+
+        if ($validator->fails()) {
+			return redirect()->route('home')->withErrors($validator->errors());
+        }
+
+        if ($request['action'] == 'cancel' &&
+            $this->timeEntryRepository->active(auth()->id()) == null) {
+            return redirect()->route('home')->withErrors('Ausencia programada finalizada, no se puede cancelar.');
+        }
+
+        $type = $request['action'] == 'close' || $request['action'] == 'cancel'
+            ? 'ordinaria'
+            : 'ausencia';
+
+        $this->timeEntryRepository->absence([
+            'id' => $entryId,
             'user_id' => auth()->id(),
-            'type' => 'ausencia'
-        ];
-
-        $this->timeEntryRepository->absence($data);
-
-        return redirect()->route('home');
-    }
-
-    public function absenceFinish($entryId)
-    {
-        $data = [
-            'entry' => $entryId,
-            'user_id' => auth()->id(),
-            'type' => 'ordinaria'
-        ];
-
-        $this->timeEntryRepository->absence($data);
-
-        return redirect()->route('home');
-    }
-
-    public function absenceCancel($entryId)
-    {
-        $this->timeEntryRepository->absenceCancel($entryId);
+            'type' => $type,
+            'comments' => $request['comments'],
+            'duration' => isset($request['planned']) ? $request['duration'] : null
+        ]);
 
         return redirect()->route('home');
     }

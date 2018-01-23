@@ -4,78 +4,53 @@
 
 <div class="container">
 
-    @if ($status['code'] == 'close')
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Dashboard</div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            @include ('layouts.errors')
+        </div>
+    </div>
 
-                    <div class="panel-body">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-heading">Dashboard</div>
+
+                <div class="panel-body">
+
+                <input type="datetime-local" name="bdaytime">
+
+
+                    @if ($status['code'] == 'close')
                         @include('home.partials.checkin')
-                    </div>
-                </div>
-            </div>
-        </div>
 
-    @elseif  ($status['code'] == 'open')
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Dashboard</div>
-                    <div class="panel-body">
+                    @elseif  ($status['code'] == 'open')
                         <div class="row">
-
                             <div class="col-sm-6">
                                 @include('home.partials.checkout')
                             </div>
-
                             <div class="col-sm-6">
-                                @include('home.partials.absence')
+                                @include('home.partials.absence', ['action' => 'open'])
                             </div>
-
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-    @elseif  ($status['code'] == 'absence')
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Dashboard</div>
-                    <div class="panel-body">
+                    @elseif  ($status['code'] == 'absence')
                         <div class="row">
-
                             <div class="col-sm-6">
                                 @include('home.partials.checkout')
                             </div>
-
                             <div class="col-sm-6">
-                                @include('home.partials.absence_finish')
+                                @include('home.partials.absence', ['action' => 'close'])
                             </div>
-
                         </div>
-                    </div>
+
+                    @elseif ($status['code'] == 'absence-planned')
+                        @include('home.partials.absence', ['action' => 'cancel'])
+
+                    @endif
                 </div>
             </div>
         </div>
-
-     @elseif ($status['code'] == 'absence-planned')
-        <div class="row">
-            <div class="col-md-10 col-md-offset-1">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Dashboard</div>
-
-                    <div class="panel-body">
-                        @include('home.partials.absence_planned')
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    @endif
-
+    </div>
 
     <div class="row">
         <div class="col-md-10 col-md-offset-1 hidden-xs">
