@@ -131,11 +131,15 @@ class RecordRepository
      * @param $action
      * @return array
      */
-    public function fetch($action)
+    public function fetch($data)
     {
-        $query = $this->$action();
+        if ($data['aggregate'] == 'record') {
+            return $this->allPaginate($data);
+        }
 
-        return DB::select(DB::raw($query));
+        $method = "groupBy{$data['aggregate']}";
+
+        return DB::select(DB::raw($this->$method($data)));
     }
 
     /**
@@ -143,13 +147,27 @@ class RecordRepository
      *
      * @return string
      */
-    protected function groupByMonth()
+    protected function groupByMonth($data)
     {
-        $query = $this->groupByDay();
+        $query = $this->groupByDay($data);
 
-        return "SELECT _month, SUM(secs) as secs, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
-            GROUP BY _month
-            ORDER BY _month DESC";
+        return "SELECT user_name, user_id, _month, SUM(secs) as secs, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
+            GROUP BY user_id, _month
+            ORDER BY user_name ASC, _month DESC";
+    }
+
+    /**
+     * Get the query to group by by week.
+     *
+     * @return string
+     */
+    protected function groupByWeek($data)
+    {
+        $query = $this->groupByDay($data);
+
+        return "SELECT user_name, user_id, _week, SUM(secs) as secs, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
+            GROUP BY user_id, _week
+            ORDER BY user_name ASC, _week DESC";
     }
 
     /**
@@ -157,13 +175,13 @@ class RecordRepository
      *
      * @return string
      */
-    protected function groupByDay()
+    protected function groupByDay($data)
     {
-        $query = $this->all();
+        $query = $this->all($data);
 
-        return "SELECT _date, _week, _month, SUM(secs) as secs, hoursToWork FROM ({$query}) as tmp
-                GROUP BY _date, _week, _month, hoursToWork
-                ORDER BY _date DESC";
+        return "SELECT user_name, user_id, _date, _week, _month, SUM(secs) as secs, hoursToWork FROM ({$query}) as tmp
+                GROUP BY user_id, _date, _week, _month, hoursToWork
+                ORDER BY user_name ASC, _date DESC";
     }
 
     /**
@@ -171,12 +189,11 @@ class RecordRepository
      *
      * @return string
      */
-    protected function all()
+    protected function all($data)
     {
-        $from = Carbon::now()->startOfWeek()->format('Y-m-d');
-        $to = Carbon::now()->format('Y-m-d');
-
-        return "SELECT
+        $query = "SELECT
+                users.name as user_name,
+                records.user_id,
                 DATE(records.check_in) as _date,
                 WEEK(records.check_in, 1)  as _week,
                 MONTH(records.check_in)  as _month,
@@ -196,10 +213,50 @@ class RecordRepository
                 FROM records
                 LEFT JOIN hours_day as tmp ON tmp.id = (
                     SELECT id FROM hours_day
-                    WHERE hours_day.user_id = 1 AND hours_day.from_date <= records.check_in
+                    WHERE hours_day.user_id = records.user_id AND hours_day.from_date <= records.check_in
                     ORDER BY hours_day.from_date DESC
                     LIMIT 1)
-                WHERE records.user_id = 1 AND DATE(records.check_in) >= '{$from}' AND DATE(records.check_in) <= '{$to}'
-                ORDER BY _date DESC";
+                LEFT JOIN users ON users.id = records.user_id
+                WHERE DATE(records.check_in) >= '{$data['from']}' AND DATE(records.check_in) <= '{$data['to']}'";
+
+        if (is_numeric($data['user'])) {
+            return $query .= " AND records.user_id IN ({$data['user']})";
+        }
+
+        if ($data['user'] != null) {
+            return $query .= " AND users.name LIKE '%{$data['user']}%'";
+        }
+
+        return $query;
+    }
+
+    /**
+     * Get all the records.
+     *
+     * @return collection
+     */
+    protected function allPaginate($data)
+    {
+        $query = $this->getModel()
+            ->join('users', 'users.id', '=', 'records.user_id')
+            ->whereRaw("DATE(records.check_in) >= '{$data['from']}'")
+            ->select([
+                'users.name',
+                'records.type',
+                DB::raw("DATE(records.check_in) as date"),
+                DB::raw("TIME(records.check_in) as time_in"),
+                DB::raw("TIME(records.check_out) as time_out"),
+                DB::raw("TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs")
+            ])
+            ->orderBy('records.check_in', 'desc');
+
+        if (is_numeric($data['user'])) {
+            $query->where('records.user_id', $data['user']);
+        }
+        else if ($data['user'] != null) {
+            $query->where('users.name', 'LIKE', "%{$data['user']}%");
+        }
+
+        return $query->paginate(15)->appends($data);
     }
 }

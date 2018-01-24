@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Model\Record\RecordRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,9 +30,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $entries = $this->recordRepository->fetch('groupByDay');
+        $userId = auth()->id();
 
-        $status = $this->recordRepository->status(auth()->id());
+        $entries = $this->recordRepository->fetch([
+            'aggregate' => 'day',
+            'user' => $userId,
+            'from' => Carbon::now()->startOfWeek()->format('Y-m-d'),
+            'to' => Carbon::now()->format('Y-m-d')
+        ]);
+
+        $status = $this->recordRepository->status($userId);
 
         return view('home.index', compact('entries', 'status'));
     }

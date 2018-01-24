@@ -25,8 +25,8 @@ Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/help', 'HelpController@index')->name('help');
 
-Route::get('/entries', 'RecordsController@index');
 
+Route::get('/summary', 'RecordsController@index');
 
 Route::post('/check-in', 'RecordsController@checkIn');
 Route::patch('/check-out/{entryId}', 'RecordsController@checkOut');

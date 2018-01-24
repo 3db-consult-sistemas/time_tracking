@@ -9,7 +9,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
 
-                    @include('entries.filter')
+                    @include('summary.filter')
 
                     Ultimas entradas
 

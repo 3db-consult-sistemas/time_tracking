@@ -20,7 +20,7 @@
             <!-- Left Side Of Navbar-->
             <ul class="nav navbar-nav">
                 @auth
-                    <li><a href="/entries">Entries</a></li>
+                    <li><a href="/summary">Resumen</a></li>
                     <li><a href="/help">Help</a></li>
                 @endauth
             </ul>
