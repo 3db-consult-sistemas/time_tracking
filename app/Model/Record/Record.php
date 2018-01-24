@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Model\TimeEntry;
+namespace App\Model\Record;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TimeEntry extends Model
+class Record extends Model
 {
     /**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
-    protected $table = 'time_entries';
+    protected $table = 'records';
 
     /**
 	 * Indicates if the model should be timestamped.

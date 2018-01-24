@@ -5,9 +5,9 @@ use App\User;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
-use App\Model\TimeEntry\TimeEntry;
+use App\Model\Record\Record;
 
-class TimeEntriesTableSeeder extends Seeder
+class RecordsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -36,7 +36,7 @@ class TimeEntriesTableSeeder extends Seeder
     }
 
     private function createEntry($id, $checkIn, $checkOut) {
-        TimeEntry::create([
+        Record::create([
             'user_id' => $id,
             'check_in' => $checkIn,
             'check_out' => $checkOut

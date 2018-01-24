@@ -1,22 +1,45 @@
 <?php
 
-namespace App\Model\TimeEntry;
+namespace App\Model\Record;
 
 use Carbon\Carbon;
+use App\Model\Record\Record;
 use Illuminate\Support\Facades\DB;
-use App\Model\TimeEntry\TimeEntry;
-use Illuminate\Database\Eloquent\Model;
 
-class TimeEntryRepository
+class RecordRepository
 {
 	/**
 	 * Instantiate a repository's model.
 	 *
-	 * @return TimeEntry
+	 * @return Record
 	 */
 	public function getModel()
 	{
-		return new TimeEntry;
+		return new Record;
+    }
+
+    /**
+     * Obtengo el estado actual del usuario.
+     *
+     * @param $userId
+     * @return void
+     */
+    public function status($userId)
+    {
+        $record = $this->active($userId);
+
+        if ($record == null) {
+            return [ 'code' => 'close', 'activeId' => null ];
+        }
+
+        if ($record->check_out != null) {
+            return [ 'code' => 'absence-planned', 'activeId' => $record->id ];
+        }
+
+        return [
+            'code' => $record->type == 'ausencia' ? 'absence' : 'open',
+            'activeId' => $record->id
+        ];
     }
 
     /**
@@ -91,23 +114,16 @@ class TimeEntryRepository
         }
 
         return DB::transaction(function () use ($now, $data) {
-            DB::table('time_entries')->where('id', $data['id'])->update([
+            DB::table('records')->where('id', $data['id'])->update([
                 'check_out' => $now
             ]);
 
             unset($data['id']);
             unset($data['duration']);
 
-            DB::table('time_entries')->insert($data);
+            DB::table('records')->insert($data);
         });
     }
-
-
-
-
-
-
-
 
     /**
      * Fetch data.
@@ -161,14 +177,14 @@ class TimeEntryRepository
         $to = Carbon::now()->format('Y-m-d');
 
         return "SELECT
-                DATE(te.check_in) as _date,
-                WEEK(te.check_in, 1)  as _week,
-                MONTH(te.check_in)  as _month,
-                te.type,
-                te.check_in,
-                te.check_out,
-                TIMESTAMPDIFF(SECOND, te.check_in, IFNULL(te.check_out, now())) as secs,
-                (SELECT CASE DATE_FORMAT(te.check_in, '%w')
+                DATE(records.check_in) as _date,
+                WEEK(records.check_in, 1)  as _week,
+                MONTH(records.check_in)  as _month,
+                records.type,
+                records.check_in,
+                records.check_out,
+                TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs,
+                (SELECT CASE DATE_FORMAT(records.check_in, '%w')
                     WHEN 0 THEN tmp.sunday
                     WHEN 1 THEN tmp.monday
                     WHEN 2 THEN tmp.tuesday
@@ -177,13 +193,13 @@ class TimeEntryRepository
                     WHEN 5 THEN tmp.friday
                     WHEN 6 THEN tmp.saturday
                 END AS '0') as hoursToWork
-                FROM time_entries te
+                FROM records
                 LEFT JOIN hours_day as tmp ON tmp.id = (
                     SELECT id FROM hours_day
-                    WHERE hours_day.user_id = 1 AND hours_day.from_date <= te.check_in
+                    WHERE hours_day.user_id = 1 AND hours_day.from_date <= records.check_in
                     ORDER BY hours_day.from_date DESC
                     LIMIT 1)
-                WHERE te.user_id = 1 AND DATE(te.check_in) >= '{$from}' AND DATE(te.check_in) <= '{$to}'
+                WHERE records.user_id = 1 AND DATE(records.check_in) >= '{$from}' AND DATE(records.check_in) <= '{$to}'
                 ORDER BY _date DESC";
     }
 }

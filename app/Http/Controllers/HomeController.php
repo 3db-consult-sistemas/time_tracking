@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Record\RecordRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Model\TimeEntry\TimeEntryRepository;
 
 class HomeController extends Controller
 {
-    protected $timeEntryRepository;
+    protected $recordRepository;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(TimeEntryRepository $timeEntryRepository)
+    public function __construct(RecordRepository $recordRepository)
     {
-        $this->timeEntryRepository = $timeEntryRepository;
+        $this->recordRepository = $recordRepository;
 
         $this->middleware('auth');
     }
@@ -29,23 +29,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $entries = $this->timeEntryRepository->fetch('groupByDay');
+        $entries = $this->recordRepository->fetch('groupByDay');
 
-        $active = $this->timeEntryRepository->active(auth()->id());
-
-        $status = [ 'code' => 'close', 'activeId' => null ];
-
-        if ($active != null) {
-
-            if ($active->check_out != null) {
-                $code = 'absence-planned';
-            }
-            else {
-                $code = $active->type == 'ausencia' ? 'absence' : 'open';
-            }
-
-            $status = [ 'code' => $code, 'activeId' => $active->id ];
-        }
+        $status = $this->recordRepository->status(auth()->id());
 
         return view('home.index', compact('entries', 'status'));
     }

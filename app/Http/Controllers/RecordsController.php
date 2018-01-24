@@ -2,31 +2,30 @@
 
 namespace App\Http\Controllers;
 
-
-
 use Carbon\Carbon;
 use App\HelpersTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Model\TimeEntry\TimeEntry;
+use App\Model\Record\Record;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\AbsenceRequests;
 use Illuminate\Support\Facades\Validator;
-use App\Model\TimeEntry\TimeEntryRepository;
+use App\Model\Record\RecordRepository;
 
-class TimeEntryController extends Controller
+class RecordsController extends Controller
 {
     use HelpersTrait;
 
-    protected $timeEntryRepository;
+    protected $recordRepository;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(TimeEntryRepository $timeEntryRepository)
+    public function __construct(RecordRepository $recordRepository)
     {
-        $this->timeEntryRepository = $timeEntryRepository;
+        $this->recordRepository = $recordRepository;
 
         $this->middleware('auth');
     }
@@ -38,11 +37,7 @@ class TimeEntryController extends Controller
      */
     public function checkIn()
     {
-        $data = [
-            'user_id' => auth()->id()
-        ];
-
-        if(! $this->timeEntryRepository->create($data)) {
+        if(! $this->recordRepository->create(['user_id' => auth()->id()])) {
             return redirect()
                 ->route('home')
                 ->withErrors('status', 'No se ha podido realizar el Check-In.');
@@ -59,7 +54,7 @@ class TimeEntryController extends Controller
      */
     public function checkOut($entryId)
     {
-        if(! $this->timeEntryRepository->close($entryId)) {
+        if(! $this->recordRepository->close($entryId)) {
             return redirect()
                 ->route('home')
                 ->withErrors('status', 'No se ha podido realizar el Check-Out.');
@@ -74,53 +69,14 @@ class TimeEntryController extends Controller
      * @param  $entryId
      * @return redirect
      */
-    public function absence(Request $request, $entryId)
+    public function absence(AbsenceRequests $request, $entryId)
     {
-        $validator = Validator::make($request->all(), [
-            'action' => 'required|in:open,close,cancel',
-            'comments' => 'string|nullable',
-            'from' => 'date_format:"Y-m-d H:i"|after:now|nullable',
-            'duration' => 'numeric|min:5|max:540'
-        ]);
+        $data = $request->formatData();
 
-        if ($validator->fails()) {
-            return redirect()->route('home')->withInput()->withErrors($validator->errors());
-        }
-
-        if ($request['action'] == 'cancel' &&
-            $this->timeEntryRepository->active(auth()->id()) == null) {
-            return redirect()
-                ->route('home')
-                ->withErrors('Ausencia programada finalizada, no se puede cancelar.');
-        }
-
-        if (($dateTime = $this->dateToCarbon($request['from'])) != null) {
-            if ($dateTime <= Carbon::now()->addMinute(10)) {
-                return redirect()
-                    ->route('home')
-                    ->withInput()
-                    ->withErrors('La fecha y hora programada debe ser al menos 10 minutos superior a la actual.');
-            }
-            $request['from'] = $dateTime;
-        }
-
-        $type = $request['action'] == 'close' || $request['action'] == 'cancel'
-            ? 'ordinaria'
-            : 'ausencia';
-
-        $this->timeEntryRepository->absence([
-            'id' => $entryId,
-            'user_id' => auth()->id(),
-            'type' => $type,
-            'comments' => $request['comments'],
-            'check_in' => isset($request['planned']) ? $request['from'] : null,
-            'duration' => isset($request['planned']) ? $request['duration'] : null
-        ]);
+        $this->recordRepository->absence($data);
 
         return redirect()->route('home');
     }
-
-
 
 
 
@@ -139,7 +95,7 @@ class TimeEntryController extends Controller
 
         /*
         // $q = $this->getModel()->select();
-        $q = TimeEntry::select();
+        $q = Record::select();
 
         foreach ($data as $field => $value) {
             $filterMethod = 'filterBy' . studly_case($field);
@@ -159,7 +115,7 @@ class TimeEntryController extends Controller
 
         $now = Carbon::now()->format('Y-m-d');
 
-        $query = TimeEntry::join('users', 'users.id', '=', 'time_entries.user_id')
+        $query = Record::join('users', 'users.id', '=', 'time_entries.user_id')
             //->where('user_id', auth()->id())
             //->whereRaw('DATE(check_in) = ?', $now)
             ->select([

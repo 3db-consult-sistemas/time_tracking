@@ -18,5 +18,14 @@ trait HelpersTrait
         }
 
         return Carbon::createFromFormat($format, $date, 'Europe/Madrid');
-	}
+    }
+
+
+
+    public function toCarbon($date, $format = 'Y-m-d H:i')
+	{
+        if ($date == null) return null;
+
+        return Carbon::createFromFormat($format, $date);
+    }
 }

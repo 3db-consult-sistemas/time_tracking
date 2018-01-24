@@ -13,7 +13,7 @@ class CreateTimeTrackingTable extends Migration
      */
     public function up()
     {
-        Schema::create('time_entries', function (Blueprint $table) {
+        Schema::create('records', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->enum('type', ['ordinaria', 'ausencia'])->default('ordinaria');
@@ -32,6 +32,6 @@ class CreateTimeTrackingTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('time_entries');
+        Schema::dropIfExists('records');
     }
 }
