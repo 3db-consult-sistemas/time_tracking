@@ -21,6 +21,9 @@
             <ul class="nav navbar-nav">
                 @auth
                     <li><a href="/summary">Resumen</a></li>
+                    @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
+                        <li><a href="/reports">Reportes</a></li>
+                    @endif
                     <li><a href="/help">Help</a></li>
                 @endauth
             </ul>
