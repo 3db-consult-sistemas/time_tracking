@@ -36,7 +36,7 @@
                                     <td>{{ $entry->date }}</td>
                                     <td>{{ $entry->time_in }}</td>
                                     <td>{{ $entry->time_out }}</td>
-                                    <td>{{ formatSeconds($entry->secs)  }}</td>
+                                    <td>{{ Helpers::formatSeconds($entry->secs)  }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

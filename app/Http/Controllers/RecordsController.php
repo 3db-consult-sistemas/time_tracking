@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Record\Record;
+use App\Model\Record\RecordRepository;
+use App\Http\Requests\AbsenceRequests;
 use Carbon\Carbon;
-use App\HelpersTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Model\Record\Record;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\AbsenceRequests;
 use Illuminate\Support\Facades\Validator;
-use App\Model\Record\RecordRepository;
 
 class RecordsController extends Controller
 {
-    use HelpersTrait;
-
     protected $recordRepository;
 
     /**

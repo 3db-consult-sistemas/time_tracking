@@ -27,9 +27,9 @@
 
                 <td>{{ date('l', strtotime($entry->_date)) }}</td>
                 <td>{{ $entry->_date }}</td>
-                <td>{{ formatSeconds($entry->secs) }}</td>
-                <td>{{ formatSeconds($entry->hoursToWork) }}</td>
-                <td class="{{ $diff < 0 ? 'danger' : 'success' }}">{{ formatSeconds($diff) }}</td>
+                <td>{{ Helpers::formatSeconds($entry->secs) }}</td>
+                <td>{{ Helpers::formatSeconds($entry->hoursToWork) }}</td>
+                <td class="{{ $diff < 0 ? 'danger' : 'success' }}">{{ Helpers::formatSeconds($diff) }}</td>
             </tr>
         @endforeach
     </tbody>
@@ -38,9 +38,9 @@
         <tr class="{{ $totalDiff < 0 ? 'danger' : 'success' }}">
             <td>Total</td>
             <td></td>
-            <td>{{ formatSeconds($total)  }}</td>
-            <td>{{ formatSeconds($totalEstimate)  }}</td>
-            <td>{{ formatSeconds($totalDiff) }}</td>
+            <td>{{ Helpers::formatSeconds($total)  }}</td>
+            <td>{{ Helpers::formatSeconds($totalEstimate)  }}</td>
+            <td>{{ Helpers::formatSeconds($totalDiff) }}</td>
         </tr>
     </tfoot>
 

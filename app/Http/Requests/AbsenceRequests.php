@@ -2,14 +2,14 @@
 
 namespace App\Http\Requests;
 
-use App\HelpersTrait;
-use App\Model\Record\RecordRepository;
 use Carbon\Carbon;
+use App\Model\Helpers;
+use App\Model\Record\RecordRepository;
 use Illuminate\Foundation\Http\FormRequest;
 
 class AbsenceRequests extends FormRequest
 {
-    use HelpersTrait;
+    use Helpers;
 
     /**
      * Determine if the user is authorized to make this request.
