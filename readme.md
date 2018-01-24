@@ -1,58 +1,115 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## Requisitos
 
-## About Laravel
+La aplicación tiene las siguientes dependencias:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+- [Laravel](https://laravel.com/docs/5.5#installation)
+	- PHP >= 7.0
+	- OpenSSL PHP Extension
+	- PDO PHP Extension
+	- Mbstring PHP Extension
+	- Tokenizer PHP Extension
+	- XML PHP Extension
+- MySQL 5.7.17
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Configuración del servidor
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
+En el servidor linux hay que cambiar la zona horaria a 'Europe/Madrid' ya que en MySQL la varibale time_zone esta como 'SYSTEM', con lo que usa la zona horaria del servidor en el que se encuentra. Para confirmar que la zona horaria de MySQL es 'SYSTEM' usamos la siguiente cosulta.
 
-## Learning Laravel
+```
+SELECT @@global.time_zone, @@session.time_zone;
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
+En linux, disponemos de los siguientes comandos para realizar el cambio.
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+```shell
+# Visualizar la zona horaria actual
+date +%Z
 
-## Laravel Sponsors
+# Listar zonas disponibles
+timedatectl list-timezones
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell):
+# Establecer la zona horaria
+sudo timedatectl set-timezone Europe/Madrid
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Pulse Storm](http://www.pulsestorm.net/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
+## Subir el proyecto al servidor y configurarlo
 
-## Contributing
+1. Crear las siguientes rutas:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+/var/www/time_tracking/
+/var/www/html/time_tracking/
+```
 
-## Security Vulnerabilities
+2. Copiar el contenido del proyecto en ```/var/www/time_tracking/``` (descartar las carpeta node_modules y scripts). La carpeta public moverla a ```/var/www/html/time_tracking/```.
+3. Estando en ```/var/www/```, ejecutar:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+sudo chown www-data:www-data time_tracking/ -R
+```
 
-## License
+4. Dentro de la carpeta del proyecto ```/var/www/time_tracking```:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+php artisan cache:clear
+sudo chmod -R 777 storage/
+```
+
+5. Actualizar los parametros del fichero ".env".
+
+6. Actualizar las rutas en el fichero ```/var/www/html/time_tracking/public/index.php``` de
+
+```php
+require __DIR__.'/../bootstrap/autoload.php';
+
+$app = require_once __DIR__.'/../bootstrap/app.php';
+```
+
+a
+
+```php
+require __DIR__.'/../../../time_tracking/bootstrap/autoload.php';
+
+$app = require_once __DIR__.'/../../../time_tracking/bootstrap/app.php';
+```
+
+7. Estando en ```/var/www/html```, ejecutar:
+
+```
+sudo chown www-data:www-data time_tracking/ -R
+```
+
+8. Crear el Archivo Virtual Host.
+
+```shell
+cd /etc/apache2/sites-available
+sudo cp 000-default.conf time_tracking.conf
+sudo nano time_tracking.conf
+```
+
+```
+<VirtualHost *:80>
+        ServerName 3db-time_tracking.app
+        ServerAlias www.3db-time_tracking.app
+        DocumentRoot /var/www/html/time_tracking/public
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+
+9. Habilitar el fichero Virtual Host
+
+```shell
+sudo a2ensite time_tracking.conf
+# En caso de querer deshabilitarlo
+sudo a2dissite time_tracking.conf
+```
+
+Reiniciar Apache para asegurar que los cambios se apliquen
+
+```shell
+sudo service apache2 restart
+```
+
+10. Acceder a la web ```http://time-tracking.app```.
