@@ -31,5 +31,5 @@ Route::patch('/check-out/{entryId}', 'RecordsController@checkOut');
 Route::post('/absence/{entryId}', 'RecordsController@absence');
 
 
-Route::get('/reports', 'ReportsController@index');
+Route::get('/reports', 'ReportsController@index')->name('reports');
 Route::get('/download', 'ReportsController@download');

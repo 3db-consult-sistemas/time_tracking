@@ -33,7 +33,12 @@ class RecordsController extends Controller
     {
         $data = $request->formatData()->all();
 
-        $entries = $this->recordRepository->fetch($data);
+        if ($data['aggregate'] == 'record') {
+            $entries = $this->recordRepository->fetchPaginate($data);
+        }
+        else {
+            $entries = $this->recordRepository->fetch($data);
+        }
 
         return view('summary.index', compact('data', 'entries'));
     }
@@ -46,12 +51,11 @@ class RecordsController extends Controller
     public function checkIn()
     {
         if(! $this->recordRepository->create(['user_id' => auth()->id()])) {
-            return redirect()
-                ->route('home')
-                ->withErrors('status', 'No se ha podido realizar el Check-In.');
+            return redirect()->back()
+                ->withErrors(['No se ha podido realizar el Check-In.']);
 		}
 
-        return redirect()->route('home');
+        return redirect()->back();
     }
 
     /**
@@ -63,12 +67,11 @@ class RecordsController extends Controller
     public function checkOut($entryId)
     {
         if(! $this->recordRepository->close($entryId)) {
-            return redirect()
-                ->route('home')
-                ->withErrors('status', 'No se ha podido realizar el Check-Out.');
+            return redirect()->back()
+                ->withErrors(['No se ha podido realizar el Check-Out.']);
 		}
 
-        return redirect()->route('home');
+        return redirect()->back();
     }
 
     /**
@@ -83,6 +86,6 @@ class RecordsController extends Controller
 
         $this->recordRepository->absence($data);
 
-        return redirect()->route('home');
+        return redirect()->back();
     }
 }

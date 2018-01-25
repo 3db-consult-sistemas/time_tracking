@@ -2,26 +2,37 @@
 
 @section('content')
 <div class="container">
+
     <div class="row">
-
         <div class="col-md-10 col-md-offset-1">
+            @include ('layouts.errors')
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-
                 <div class="panel-heading">Reportes</div>
-
                 <div class="panel-body">
 
                     <form class="form" method="GET" action="/download">
                         <div class="row">
+
+                            <div class='col-xs-12'>
+                                <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input name="userName" type="text" class="form-control" placeholder="Nombre" value="{{ old('userName') }}">
+                                </div>
+                            </div>
+
                             <div class='col-xs-12'>
                                 <div class="form-group">
                                     <label>Agregado</label>
                                     <select name="aggregate" class="form-control">
-                                        <option value="day">Diario</option>
-                                        <option value="week">Semanal</option>
-                                        <option value="month">Mensual</option>
-                                        <option value="record">Sin agregar</option>
+                                        <option value="day" {{ old('aggregate') == 'day' ? 'selected' : '' }}>Diario</option>
+                                        <option value="week" {{ old('aggregate') == 'week' ? 'selected' : '' }}>Semanal</option>
+                                        <option value="month" {{ old('aggregate') == 'month' ? 'selected' : '' }}>Mensual</option>
+                                        <option value="record" {{ old('aggregate') == 'record' ? 'selected' : '' }}>Sin agregar</option>
                                     </select>
                                 </div>
                             </div>
@@ -35,6 +46,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class='col-xs-12'>
                                 <div class="form-group">
                                     <label>Hasta</label>
@@ -55,7 +67,6 @@
 
                 </div>
             </div>
-
         </div>
     </div>
 </div>

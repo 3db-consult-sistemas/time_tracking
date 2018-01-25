@@ -133,11 +133,7 @@ class RecordRepository
      */
     public function fetch($data)
     {
-        if ($data['aggregate'] == 'record') {
-            return $this->allPaginate($data);
-        }
-
-        $method = "groupBy{$data['aggregate']}";
+        $method = $data['aggregate'] == 'record' ? "all" : "groupBy{$data['aggregate']}";
 
         return DB::select(DB::raw($this->$method($data)));
     }
@@ -151,7 +147,7 @@ class RecordRepository
     {
         $query = $this->groupByDay($data);
 
-        return "SELECT user_name, user_id, _month, SUM(secs) as secs, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
+        return "SELECT user_name, user_id, _month, SUM(secs) as secs, AVG(secs) as average, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
             GROUP BY user_id, _month
             ORDER BY user_name ASC, _month DESC";
     }
@@ -165,9 +161,9 @@ class RecordRepository
     {
         $query = $this->groupByDay($data);
 
-        return "SELECT user_name, user_id, _week, SUM(secs) as secs, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
-            GROUP BY user_id, _week
-            ORDER BY user_name ASC, _week DESC";
+        return "SELECT user_name, user_id, _month, _week, SUM(secs) as secs, AVG(secs) as average, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
+            GROUP BY user_id, _week, _month
+            ORDER BY user_name ASC, _month DESC, _week DESC";
     }
 
     /**
@@ -179,7 +175,7 @@ class RecordRepository
     {
         $query = $this->all($data);
 
-        return "SELECT user_name, user_id, _date, _week, _month, SUM(secs) as secs, hoursToWork FROM ({$query}) as tmp
+        return "SELECT user_name, user_id, _date, _month, _week, SUM(secs) as secs, hoursToWork FROM ({$query}) as tmp
                 GROUP BY user_id, _date, _week, _month, hoursToWork
                 ORDER BY user_name ASC, _date DESC";
     }
@@ -200,6 +196,7 @@ class RecordRepository
                 records.type,
                 records.check_in,
                 records.check_out,
+                records.comments,
                 TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs,
                 (SELECT CASE DATE_FORMAT(records.check_in, '%w')
                     WHEN 0 THEN tmp.sunday
@@ -220,14 +217,13 @@ class RecordRepository
                 WHERE DATE(records.check_in) >= '{$data['from']}' AND DATE(records.check_in) <= '{$data['to']}'";
 
         if (is_numeric($data['userName'])) {
-            return $query .= " AND records.user_id IN ({$data['userName']})";
+            $query .= " AND records.user_id IN ({$data['userName']})";
+        }
+        elseif ($data['userName'] != null) {
+            $query .= " AND users.name LIKE '%{$data['userName']}%'";
         }
 
-        if ($data['userName'] != null) {
-            return $query .= " AND users.name LIKE '%{$data['userName']}%'";
-        }
-
-        return $query;
+        return $query .= " ORDER BY user_name ASC, records.check_in DESC";
     }
 
     /**
@@ -235,7 +231,7 @@ class RecordRepository
      *
      * @return collection
      */
-    protected function allPaginate($data)
+    public function fetchPaginate($data)
     {
         $query = $this->getModel()
             ->join('users', 'users.id', '=', 'records.user_id')

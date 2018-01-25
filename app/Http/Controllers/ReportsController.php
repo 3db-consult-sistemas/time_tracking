@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Model\Helpers;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\ReportRequest;
@@ -10,6 +11,8 @@ use App\Model\Record\RecordRepository;
 
 class ReportsController extends Controller
 {
+	use Helpers;
+
     protected $recordRepository;
 
     /**
@@ -24,48 +27,36 @@ class ReportsController extends Controller
         $this->middleware(['auth', 'checkrole:super_admin,admin']);
     }
 
-
+    /**
+     * Visualizo la vista de reportes.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         return view('reports.index');
-    }
-
-    public function download(ReportRequest $request)
-    {
-        dd('hola');
-        //$entries = $this->recordRepository->fetch($data);
-
-
-
-
-        $data = [
-            ['name' => 'ivan'],
-            ['name' => 'madoka']
-        ];
-
-    	$fileName = Carbon::now()->format('Ymd_Hi') . '_reporte';
-
-		Excel::create($fileName, function($excel) use ($data) {
-            $this->addSheet('reporte', $excel, $data);
-            //$this->addSheet($data['type'], $excel, $this->getFrom($data));
-		})->export('xlsx');
-    }
-
-	/**
-	 * Filtro las alarmas de un tipo determinado.
-	 *
-	 * @param  $data
-	 * @return array
-	 */
-	private function getFrom($data)
-	{
-		$array = $this->alarmRepository->fetch($data);
-
-		return array_map( function($item) {
-			return get_object_vars($item);
-		}, $array);
 	}
 
+    /**
+     * Aplico el filtro seleccionado y descargo la informacion en formato excel.
+     *
+     */
+    public function download(ReportRequest $request)
+    {
+		$entries = $this->recordRepository->fetch($request->all());
+
+		if (count($entries) == 0) {
+			return redirect()->back()
+				->withInput()
+				->withErrors(['No se han encontrado registros con el filtro actual.']);
+		}
+
+		$fileName = Carbon::now()->format('Ymd_Hi') . '_' . $request['aggregate'] . '_' . studly_case($request['userName'] ?? 'reporte');
+
+		Excel::create($fileName, function($excel) use ($entries) {
+            $this->addSheet('Hoja1', $excel, $this->format($entries));
+		})->export('xlsx');
+    }
 
     /**
 	 * Creo una pestaña nueva en el excel.
@@ -96,7 +87,40 @@ class ReportsController extends Controller
 		}
     }
 
+	/**
+	 * Doy formato de array de arrays necesario para exportar a excel.
+	 *
+	 * @param  $array
+	 * @return array
+	 */
+	private function format($array)
+	{
+		return array_map( function($item) {
+			$entry = [];
+			$entry['nombre'] = $item->user_name;
+			if (property_exists($item, '_date')) $entry['fecha'] = $item->_date;
+			$entry['mes'] = $item->_month;
+			if (property_exists($item, '_week')) $entry['semana'] = $item->_week;
+			if (property_exists($item, 'type')) {
+				$entry['tipo'] = $item->type;
+				$entry['check_In'] = $item->check_in;
+				$entry['check_Out'] = $item->check_out;
+			}
+			$entry['trabajado'] = $this->formatSeconds($item->secs);
+			$entry['estimado'] = $this->formatSeconds($item->hoursToWork);
+			if (property_exists($item, 'average')) $entry['tiempo_medio'] = $this->formatSeconds($item->average);
+			if (property_exists($item, 'comments')) $entry['comentarios'] = $item->comments;
+			return $entry;
 
-
-
+			/*
+			unset($item->user_id);
+			if (property_exists($item, 'average')) {
+				$item->average = $this->formatSeconds($item->average);
+			}
+			$item->secs = $this->formatSeconds($item->secs);
+			$item->hoursToWork = $this->formatSeconds($item->hoursToWork);
+			return get_object_vars($item);
+			*/
+		}, $array);
+	}
 }
