@@ -34,7 +34,7 @@ class HomeController extends Controller
 
         $entries = $this->recordRepository->fetch([
             'aggregate' => 'day',
-            'user' => $userId,
+            'userName' => $userId,
             'from' => Carbon::now()->startOfWeek()->format('Y-m-d'),
             'to' => Carbon::now()->format('Y-m-d')
         ]);

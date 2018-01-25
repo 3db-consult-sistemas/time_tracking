@@ -31,7 +31,7 @@ class RecordsController extends Controller
      */
     public function index(RecordRequest $request)
     {
-        $data = $request->formatData();
+        $data = $request->formatData()->all();
 
         $entries = $this->recordRepository->fetch($data);
 

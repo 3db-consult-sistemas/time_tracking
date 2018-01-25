@@ -21,13 +21,15 @@ Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
-
 Route::get('/home', 'HomeController@index')->name('home');
+
 Route::get('/help', 'HelpController@index')->name('help');
 
 Route::get('/summary', 'RecordsController@index');
-Route::get('/reports', 'ReportsController@index');
-
 Route::post('/check-in', 'RecordsController@checkIn');
 Route::patch('/check-out/{entryId}', 'RecordsController@checkOut');
 Route::post('/absence/{entryId}', 'RecordsController@absence');
+
+
+Route::get('/reports', 'ReportsController@index');
+Route::get('/download', 'ReportsController@download');

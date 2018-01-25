@@ -48,7 +48,7 @@
 				<div class='input-group date' id='dtpFrom'>
 					<input name="from" id="idFrom" type='text' class="form-control" value="{{ old('from') }}" placeholder="Ahora"/>
 					<span class="input-group-addon">
-						<span class="glyphicon glyphicon-calendar"></span>
+                        <i class="fa fa-calendar" aria-hidden="true"></i>
 					</span>
 				</div>
 			</div>

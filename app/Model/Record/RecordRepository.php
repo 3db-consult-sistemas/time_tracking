@@ -219,12 +219,12 @@ class RecordRepository
                 LEFT JOIN users ON users.id = records.user_id
                 WHERE DATE(records.check_in) >= '{$data['from']}' AND DATE(records.check_in) <= '{$data['to']}'";
 
-        if (is_numeric($data['user'])) {
-            return $query .= " AND records.user_id IN ({$data['user']})";
+        if (is_numeric($data['userName'])) {
+            return $query .= " AND records.user_id IN ({$data['userName']})";
         }
 
-        if ($data['user'] != null) {
-            return $query .= " AND users.name LIKE '%{$data['user']}%'";
+        if ($data['userName'] != null) {
+            return $query .= " AND users.name LIKE '%{$data['userName']}%'";
         }
 
         return $query;
@@ -250,11 +250,11 @@ class RecordRepository
             ])
             ->orderBy('records.check_in', 'desc');
 
-        if (is_numeric($data['user'])) {
-            $query->where('records.user_id', $data['user']);
+        if (is_numeric($data['userName'])) {
+            $query->where('records.user_id', $data['userName']);
         }
-        else if ($data['user'] != null) {
-            $query->where('users.name', 'LIKE', "%{$data['user']}%");
+        else if ($data['userName'] != null) {
+            $query->where('users.name', 'LIKE', "%{$data['userName']}%");
         }
 
         return $query->paginate(15)->appends($data);

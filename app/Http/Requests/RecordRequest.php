@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RecordRequest extends FormRequest
@@ -25,7 +26,7 @@ class RecordRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|nullable',
+            'name' => 'string|nullable|min:4',
             'aggregate' => 'in:day,week,record'
         ];
     }
@@ -37,27 +38,18 @@ class RecordRequest extends FormRequest
      */
     public function formatData()
     {
-        $data = [
-            'aggregate' => $this['aggregate'],
-            'user' => null
-        ];
+        $this['aggregate'] = $this['aggregate'] != null ? $this['aggregate'] : 'day';
+        $this['from'] = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $this['to'] = Carbon::now()->format('Y-m-d');
+        $this['userName'] = auth()->id();
 
-        $data['aggregate'] = $this->get('aggregate') != null
-            ? $this->get('aggregate')
-            : 'day';
+        if (Gate::check('checkrole', 'super_admin') ||
+            Gate::check('checkrole', 'admin') &&
+            $this['name'] != null) {
+            $this['name'] = $this['name'];
+            $this['userName'] = $this['name'];
+        }
 
-        $data['to'] = Carbon::now()->format('Y-m-d');
-        $data['from'] = Carbon::now()->startOfMonth()->format('Y-m-d');
-
-            // Si autorizado
-        // if (isAdmin) {
-        $data['user'] = $this->get('name') != null
-            ? $this->get('name')
-            : null;
-        // }
-
-        $data['user'] = auth()->id();
-
-        return $data;
+        return $this;
     }
 }
