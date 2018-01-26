@@ -23,6 +23,7 @@
                     <li><a href="/summary">Resumen</a></li>
                     @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
                         <li><a href="/reports">Reportes</a></li>
+                        <li><a href="/getIp">Obtener IP</a></li>
                     @endif
                     <li><a href="/help">Help</a></li>
                 @endauth

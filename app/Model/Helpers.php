@@ -34,4 +34,17 @@ trait Helpers
         $seconds = $seconds-($hours*3600)-($minutes*60);
         return sprintf("%s%02d:%02d:%02d", $symbol, $hours, $minutes, $seconds);
     }
+
+    public static function getIp() {
+        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        }
+
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+
+        return $_SERVER['REMOTE_ADDR'];
+    }
+
 }

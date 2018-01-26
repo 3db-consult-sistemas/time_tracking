@@ -33,3 +33,7 @@ Route::post('/absence/{entryId}', 'RecordsController@absence');
 
 Route::get('/reports', 'ReportsController@index')->name('reports');
 Route::get('/download', 'ReportsController@download');
+
+Route::get('/getIp', function() {
+    return \App\Model\Helpers::getIp();
+});
