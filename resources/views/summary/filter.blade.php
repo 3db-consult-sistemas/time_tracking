@@ -2,7 +2,7 @@
 
     @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
         <div class="form-group">
-            <input name="name" id="idName" type="text" class="form-control input-sm" placeholder="Nombre" value="{{ $data['name'] ?? '' }}" autofocus>
+            <input name="name" id="idName" type="text" class="form-control input-sm" placeholder="Nombre" value="{{ $data['name'] ?? '' }}" autocomplete="off" autofocus>
         </div>
     @endif
 

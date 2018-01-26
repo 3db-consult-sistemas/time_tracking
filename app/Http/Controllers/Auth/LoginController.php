@@ -36,4 +36,14 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    /**
+     * Override the username to be used by the controller.
+     *
+     * @return strign
+     */
+    public function username()
+    {
+        return 'username';
+    }
 }

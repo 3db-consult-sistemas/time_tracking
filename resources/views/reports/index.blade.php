@@ -21,7 +21,7 @@
                             <div class='col-xs-12'>
                                 <div class="form-group">
                                     <label>Nombre</label>
-                                    <input name="userName" type="text" class="form-control" placeholder="Nombre" value="{{ old('userName') }}">
+                                    <input name="userName" type="text" class="form-control" value="{{ old('userName') }}" placeholder="Nombre" autocomplete="off">
                                 </div>
                             </div>
 
