@@ -23,7 +23,12 @@
                     <li><a href="/summary">Resumen</a></li>
                     @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
                         <li><a href="/reports">Reportes</a></li>
-                        <li><a href="/getIp">Obtener IP</a></li>
+
+                        @if ($openTickets > 0)
+                            <li><a href="/tickets">Tickets <span class="badge">{{ $openTickets }}</span></a></li>
+                        @else
+                            <li><a href="/tickets">Tickets</a></li>
+                        @endif
                     @endif
                     <li><a href="/help">Help</a></li>
                 @endauth
@@ -35,6 +40,11 @@
                 @guest
                     <li><a href="{{ route('login') }}">Login</a></li>
                 @else
+
+                    @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
+                        <li><a href="/getIp">Obtener IP</a></li>
+                    @endif
+
                     <li>
                         <a href="{{ route('logout') }}"
                             onclick="event.preventDefault();

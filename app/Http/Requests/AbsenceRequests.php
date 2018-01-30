@@ -30,7 +30,7 @@ class AbsenceRequests extends FormRequest
     {
         return [
             'action' => 'required|in:open,close,cancel',
-            'comments' => 'string|nullable',
+            'comments' => 'string|nullable|max:191',
             'from' => 'date_format:"Y-m-d H:i"|nullable',
             'duration' => 'numeric|min:5|max:540'
         ];

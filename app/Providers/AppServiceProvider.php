@@ -15,6 +15,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        \View::composer('*', function($view) {
+            $openTickets = \App\Model\Ticket\Ticket::where('status', 'open')->count();
+            $view->with('openTickets', $openTickets);
+        });
     }
 
     /**

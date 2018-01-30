@@ -34,4 +34,12 @@ class Ticket extends Model
     {
         return $this->belongsTo(\App\Model\Record\Record::class);
     }
+
+    /**
+     * Get the user that owns the ticket.
+     */
+    public function user()
+    {
+        return $this->belongsTo(\App\User::class);
+    }
 }

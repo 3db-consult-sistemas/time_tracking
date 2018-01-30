@@ -30,9 +30,12 @@ Route::post('/check-in', 'RecordsController@checkIn');
 Route::patch('/check-out/{entryId}', 'RecordsController@checkOut');
 Route::post('/absence/{entryId}', 'RecordsController@absence');
 
-
 Route::get('/reports', 'ReportsController@index')->name('reports');
 Route::get('/download', 'ReportsController@download');
+
+Route::get('/tickets', 'TicketsController@index');
+Route::get('/tickets/{ticket}/edit', 'TicketsController@edit')->name('tickets.edit');
+Route::patch('/tickets/{ticket}', 'TicketsController@update');
 
 Route::get('/getIp', function() {
     return \App\Model\Helpers::getIp();
