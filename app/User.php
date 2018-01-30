@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'role',
     ];
 
     /**
@@ -28,10 +28,18 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the tickets record associated with the user.
+     * Get the tickets records associated with the user.
      */
     public function tickets()
     {
         return $this->hasMany(\App\Model\Ticket\Ticket::class);
+    }
+
+    /**
+     * Get the timetable records associated with the user.
+     */
+    public function timetables()
+    {
+        return $this->hasMany(\App\Model\HoursDay\HoursDay::class);
     }
 }

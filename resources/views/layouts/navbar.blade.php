@@ -29,6 +29,8 @@
                         @else
                             <li><a href="/tickets">Tickets</a></li>
                         @endif
+
+                        <li><a href="/users">Usuarios</a></li>
                     @endif
                     <li><a href="/help">Help</a></li>
                 @endauth

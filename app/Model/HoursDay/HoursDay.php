@@ -34,4 +34,12 @@ class HoursDay extends Model
      */
     protected $dates = ['from_date'];
 
+    /**
+     * Get the user that owns the timetable.
+     */
+    public function user()
+    {
+        return $this->belongsTo(\App\User::class);
+    }
+
 }

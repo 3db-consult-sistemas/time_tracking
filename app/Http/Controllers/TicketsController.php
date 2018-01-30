@@ -26,7 +26,7 @@ class TicketsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
         $tickets = Ticket::with(['record', 'user'])
             ->orderBy('status')
@@ -34,24 +34,6 @@ class TicketsController extends Controller
             ->paginate(15);
 
         return view('tickets.index', compact('tickets'));
-
-        /*
-        $validator = Validator::make($request->all(), ['status' => 'in:open,close']);
-
-		if ($validator->fails()) {
-            return redirect()->back()->withInput()->withErrors($validator);
-        }
-
-        $status = isset($request['status']) ? $request['status'] : 'open';
-
-        $tickets = Ticket::with(['record', 'user'])
-            ->where('status', $status)
-            ->orderBy('status')
-            ->latest()
-            ->paginate(15);
-
-        return view('tickets.index', compact('status', 'tickets'));
-        */
 	}
 
     /**

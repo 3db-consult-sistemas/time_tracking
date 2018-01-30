@@ -37,6 +37,10 @@ Route::get('/tickets', 'TicketsController@index');
 Route::get('/tickets/{ticket}/edit', 'TicketsController@edit')->name('tickets.edit');
 Route::patch('/tickets/{ticket}', 'TicketsController@update');
 
+Route::get('/users', 'UsersController@index');
+Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');
+Route::patch('/users/{user}/role', 'UsersController@updateRole')->name('users.update.role');
+
 Route::get('/getIp', function() {
     return \App\Model\Helpers::getIp();
 });
