@@ -34,4 +34,11 @@ class Record extends Model
      */
     protected $dates = ['check_in', 'check_out'];
 
+    /**
+     * Get the ticket record associated with the record.
+     */
+    public function ticket()
+    {
+        return $this->hasOne(\App\Model\Ticket\Ticket::class);
+    }
 }
