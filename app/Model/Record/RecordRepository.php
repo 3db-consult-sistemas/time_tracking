@@ -208,10 +208,10 @@ class RecordRepository
                     WHEN 6 THEN tmp.saturday
                 END AS '0') as hoursToWork
                 FROM records
-                LEFT JOIN hours_day as tmp ON tmp.id = (
-                    SELECT id FROM hours_day
-                    WHERE hours_day.user_id = records.user_id AND hours_day.from_date <= records.check_in
-                    ORDER BY hours_day.from_date DESC
+                LEFT JOIN timetables as tmp ON tmp.id = (
+                    SELECT id FROM timetables
+                    WHERE timetables.user_id = records.user_id AND timetables.from_date <= records.check_in
+                    ORDER BY timetables.from_date DESC
                     LIMIT 1)
                 LEFT JOIN users ON users.id = records.user_id
                 WHERE DATE(records.check_in) >= '{$data['from']}' AND DATE(records.check_in) <= '{$data['to']}'";

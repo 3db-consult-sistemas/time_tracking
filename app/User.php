@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -40,6 +41,17 @@ class User extends Authenticatable
      */
     public function timetables()
     {
-        return $this->hasMany(\App\Model\HoursDay\HoursDay::class);
+        return $this->hasMany(\App\Model\Timetable\Timetable::class)
+            ->orderBy('from_date', 'desc')
+            ->select([
+                 DB::raw("DATE(from_date) as date"),
+                'monday',
+                'tuesday',
+                'wednesday',
+                'thursday',
+                'friday',
+                'saturday',
+                'sunday'
+            ]);
     }
 }

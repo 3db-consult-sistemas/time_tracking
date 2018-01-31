@@ -13,6 +13,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(UsersTableSeeder::class);
         $this->call(RecordsTableSeeder::class);
-        $this->call(HoursDaySeeder::class);
+        $this->call(TimetableSeeder::class);
     }
 }

@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Model\HoursDay;
+namespace App\Model\Timetable;
 
 use Illuminate\Database\Eloquent\Model;
 
-class HoursDay extends Model
+class Timetable extends Model
 {
     /**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
-    protected $table = 'hours_day';
+    protected $table = 'timetables';
 
     /**
 	 * Indicates if the model should be timestamped.

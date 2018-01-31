@@ -6,7 +6,7 @@ use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class HoursDaySeeder extends Seeder
+class TimetableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -30,7 +30,7 @@ class HoursDaySeeder extends Seeder
     }
 
     private function createEntry($id, $date, $seconds) {
-        DB::table('hours_day')->insert([
+        DB::table('timetables')->insert([
             'user_id' => $id,
             'from_date' => $date,
             'monday' => $seconds,

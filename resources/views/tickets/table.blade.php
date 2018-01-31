@@ -1,3 +1,5 @@
+@if (count($tickets) > 0)
+
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
@@ -28,3 +30,7 @@
 </div>
 
 {{ $tickets->links() }}
+
+@else
+    <p>No hay ticketsabiertos o cerrados para visualizar.</p>
+@endif

@@ -1,10 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHoursDayTable extends Migration
+class CreateTimetablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +14,7 @@ class CreateHoursDayTable extends Migration
      */
     public function up()
     {
-        Schema::create('hours_day', function (Blueprint $table) {
+        Schema::create('timetables', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->date('from_date');
@@ -30,6 +31,16 @@ class CreateHoursDayTable extends Migration
                 ->on('users')
                 ->onDelete('cascade');
         });
+
+        DB::getPdo()->exec('
+            CREATE TRIGGER timetable_after_insert_user AFTER INSERT ON users
+            FOR EACH ROW
+            BEGIN
+                INSERT INTO timetables
+                (user_id, from_date, monday, tuesday, wednesday, thursday, friday)
+                VALUES
+                (NEW.id, SYSDATE(), 29700, 29700, 29700, 29700, 29700);
+            END');
     }
 
     /**
@@ -39,6 +50,6 @@ class CreateHoursDayTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hours_day');
+        Schema::dropIfExists('timetables');
     }
 }
