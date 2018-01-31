@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table">
+    <table class="table table-condensed">
         <thead>
             <tr>
                 <th>Desde</th>
@@ -10,6 +10,7 @@
                 <th>Viernes</th>
                 <th>Sabado</th>
                 <th>Domingo</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -23,8 +24,25 @@
                     <td class="{{ $timetable->friday > 0 ? 'success' : ''}}">{{ Helpers::formatSeconds($timetable->friday) }}</td>
                     <td class="{{ $timetable->saturday > 0 ? 'success' : ''}}">{{ Helpers::formatSeconds($timetable->saturday) }}</td>
                     <td class="{{ $timetable->sunday > 0 ? 'success' : ''}}">{{ Helpers::formatSeconds($timetable->sunday) }}</td>
+                    <td>
+                        <form method="POST" action="{{ url('timetable/' . $timetable->id) }}">
+                            {{ method_field('DELETE') }}
+                            {{ csrf_field() }}
+                            <button type="submit" class="btn btn-danger btn-sm btn-block btn-delete">Delete</button>
+                        </form>
+                    </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.btn-delete').click(function(e){
+            if (! confirm('¿Seguro que desea eliminar el horario?')) {
+                e.preventDefault();
+            }
+        });
+    });
+</script>

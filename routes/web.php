@@ -41,6 +41,9 @@ Route::get('/users', 'UsersController@index');
 Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');
 Route::patch('/users/{user}/role', 'UsersController@updateRole')->name('users.update.role');
 
+Route::post('/timetable', 'TimetablesController@store');
+Route::delete('/timetable/{id}', 'TimetablesController@destroy');
+
 Route::get('/getIp', function() {
     return \App\Model\Helpers::getIp();
 });

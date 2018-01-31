@@ -35,6 +35,14 @@ class Record extends Model
     protected $dates = ['check_in', 'check_out'];
 
     /**
+     * Get the user that owns the record.
+     */
+    public function user()
+    {
+        return $this->belongsTo(\App\User::class);
+    }
+
+    /**
      * Get the ticket record associated with the record.
      */
     public function ticket()

@@ -37,6 +37,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the records associated with the user.
+     */
+    public function records()
+    {
+        return $this->hasMany(\App\Model\Record\Record::class);
+    }
+
+    /**
      * Get the timetable records associated with the user.
      */
     public function timetables()
@@ -44,6 +52,7 @@ class User extends Authenticatable
         return $this->hasMany(\App\Model\Timetable\Timetable::class)
             ->orderBy('from_date', 'desc')
             ->select([
+                'id',
                  DB::raw("DATE(from_date) as date"),
                 'monday',
                 'tuesday',
@@ -53,5 +62,29 @@ class User extends Authenticatable
                 'saturday',
                 'sunday'
             ]);
+    }
+
+
+    public function active()
+    {
+        /*
+        $recordRepository = new \App\Model\Record\RecordRepository();
+
+        $data = $recordRepository->active($this->id);
+
+
+
+        $data = $this->records
+            ->where('user_id', $this->id)
+            ->orWhere(function ($q) {
+                $q->where('check_out', '>', Carbon::now())->where('type', 'ausencia');
+            });
+
+        dd($data);
+
+*/
+        return 'd';
+        //
+
     }
 }

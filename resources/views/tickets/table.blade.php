@@ -1,7 +1,7 @@
 @if (count($tickets) > 0)
 
 <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -22,7 +22,7 @@
                     <td>{{ $ticket->user->name }}</td>
                     <td>{{ $ticket->record->type }}</td>
                     <td>{{ $ticket->record->check_in }}</td>
-                    <td><a href="{{ route('tickets.edit', $ticket) }}">Detalles</a></td>
+                    <td><a class="btn btn-default btn-block btn-sm" href="{{ route('tickets.edit', $ticket) }}">Detalles</a></td>
                 </tr>
             @endforeach
         </tbody>

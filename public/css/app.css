@@ -11407,10 +11407,6 @@ button.close {
   clip: auto;
 }
 
-.custom-btn-width {
-  width: 100px;
-}
-
 /*
  * Sobreescribo los valores badge (bootstrap)
  */
@@ -11419,5 +11415,25 @@ button.close {
   background-color: #d9534f;
   border-radius: 1px;
   margin-left: .4em;
+}
+
+/*
+ * Tamaño fijo para botones
+ */
+
+.custom-btn-width {
+  width: 100px;
+}
+
+/*
+ * Separacion entre celdas de la tabla para añadir horarios
+ */
+
+.custom-table-timetable td {
+  padding: 2px !important;
+}
+
+.table td {
+  vertical-align: middle !important;
 }
 
