@@ -32,7 +32,7 @@
 
                         <li><a href="/users">Usuarios</a></li>
                     @endif
-                    <li><a href="/help">Help</a></li>
+                    <li><a href="/help">Ayuda</a></li>
                 @endauth
             </ul>
 
