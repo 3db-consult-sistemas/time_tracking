@@ -28,7 +28,7 @@ class TicketsController extends Controller
      */
     public function index()
     {
-        $tickets = Ticket::with(['record', 'user'])
+        $tickets = Ticket::with('record', 'user')
             ->orderBy('status')
             ->latest()
             ->paginate(15);

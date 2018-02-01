@@ -52,15 +52,16 @@ class RecordRepository
     public function active($userId = null)
     {
         $query = $this->getModel()
-            ->whereNull('check_out')
-            ->orWhere(function ($query) {
-                $now = Carbon::now();
-                $query->where('check_out', '>', $now)->where('type', 'ausencia');
+            ->where(function ($q) {
+                $q->whereNull('check_out')
+                    ->orWhere(function ($q) {
+                        $q->where('check_out', '>', Carbon::now())->where('type', 'ausencia');
+                });
             });
 
         return $userId != null
-			? $query->where('user_id', $userId)->first()
-			: $query->get();
+            ? $query->where('user_id', $userId)->first()
+            : $query->get();
     }
 
     /**

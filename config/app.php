@@ -168,6 +168,7 @@ return [
          * Package Service Providers...
          */
         Adldap\Laravel\AdldapServiceProvider::class,
+        Barryvdh\Debugbar\ServiceProvider::class,
 
         /*
          * Application Service Providers...

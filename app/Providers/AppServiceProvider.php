@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Model\Ticket\Ticket;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,9 +17,17 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        \View::composer('*', function($view) {
-            $openTickets = \App\Model\Ticket\Ticket::where('status', 'open')->count();
-            $view->with('openTickets', $openTickets);
+        \View::composer([
+            'home.index',
+            'summary.index',
+            'reports.index',
+            'tickets.index',
+            'tickets.edit',
+            'users.index',
+            'users.edit',
+            'help.index'
+        ], function($view) {
+            $view->with('openTickets', Ticket::where('status', 'open')->count());
         });
     }
 

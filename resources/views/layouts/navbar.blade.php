@@ -24,7 +24,7 @@
                     @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
                         <li><a href="/reports">Reportes</a></li>
 
-                        @if ($openTickets > 0)
+                        @if (isset($openTickets) && $openTickets > 0)
                             <li><a href="/tickets">Tickets <span class="badge">{{ $openTickets }}</span></a></li>
                         @else
                             <li><a href="/tickets">Tickets</a></li>

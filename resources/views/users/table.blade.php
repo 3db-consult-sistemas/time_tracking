@@ -11,15 +11,12 @@
         </thead>
         <tbody>
             @foreach ($users as $user)
-
-            {{ $user->active() }}
-
-                <tr class="success">
+                <tr class="{{ $user->class }}">
                     <td>{{ $user->username }}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->role }}</td>
                     <td>{{ $user->email }}</td>
-                    <td><a class="btn btn-default btn-block btn-sm" href="{{ route('users.edit', $user) }}">configurar</a></td>
+                    <td><a class="btn btn-default btn-block btn-sm" href="{{ route('users.edit', $user->id) }}">configurar</a></td>
                 </tr>
             @endforeach
         </tbody>

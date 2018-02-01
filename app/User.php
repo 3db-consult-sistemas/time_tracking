@@ -64,27 +64,11 @@ class User extends Authenticatable
             ]);
     }
 
-
+    /*
     public function active()
     {
-        /*
         $recordRepository = new \App\Model\Record\RecordRepository();
-
-        $data = $recordRepository->active($this->id);
-
-
-
-        $data = $this->records
-            ->where('user_id', $this->id)
-            ->orWhere(function ($q) {
-                $q->where('check_out', '>', Carbon::now())->where('type', 'ausencia');
-            });
-
-        dd($data);
-
-*/
-        return 'd';
-        //
-
+        return $recordRepository->status($this->id)['code'];
     }
+    */
 }

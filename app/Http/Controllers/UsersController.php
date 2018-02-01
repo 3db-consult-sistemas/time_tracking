@@ -3,19 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
 {
+    protected $userRepository;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(UserRepository $userRepository)
     {
         $this->middleware(['auth', 'checkrole:super_admin,admin']);
+
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -25,7 +30,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('username')->get();
+        $users = $this->userRepository->fetch();
 
         return view('users.index', compact('users'));
     }
