@@ -119,7 +119,7 @@ sudo service apache2 restart
 Las entradas no cerradas a final de dia se cerran al ejecutarse el comando 'record:close', el cual será ejecutado por el crontab.
 
 ```shell
-* * * * * /usr/bin/php7.1 /var/www/html/artisan schedule:run 1>> /dev/null 2>&1
+* * * * * /usr/bin/php7.0 /var/www/time_tracking/artisan schedule:run 1>> /dev/null 2>&1
 ```
 
 Tener en cuenta que las rutas existan.

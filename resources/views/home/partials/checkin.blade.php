@@ -1,4 +1,4 @@
-<form method="POST" action="/check-in">
+<form method="POST" action="{{ url('/check-in') }}">
     {{ csrf_field() }}
 
     <div class="form-group">

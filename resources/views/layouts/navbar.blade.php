@@ -20,19 +20,19 @@
             <!-- Left Side Of Navbar-->
             <ul class="nav navbar-nav">
                 @auth
-                    <li><a href="/summary">Resumen</a></li>
+                    <li><a href="{{ url('/summary') }}">Resumen</a></li>
                     @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
-                        <li><a href="/reports">Reportes</a></li>
+                        <li><a href="{{ url('/reports') }}">Reportes</a></li>
 
                         @if (isset($openTickets) && $openTickets > 0)
-                            <li><a href="/tickets">Tickets <span class="badge">{{ $openTickets }}</span></a></li>
+                            <li><a href="{{ url('/tickets') }}">Tickets <span class="badge">{{ $openTickets }}</span></a></li>
                         @else
-                            <li><a href="/tickets">Tickets</a></li>
+                            <li><a href="{{ url('/tickets') }}">Tickets</a></li>
                         @endif
 
-                        <li><a href="/users">Usuarios</a></li>
+                        <li><a href="{{ url('/users') }}">Usuarios</a></li>
                     @endif
-                    <li><a href="/help">Ayuda</a></li>
+                    <li><a href="{{ url('/help') }}">Ayuda</a></li>
                 @endauth
             </ul>
 
@@ -44,7 +44,7 @@
                 @else
 
                     @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
-                        <li><a href="/getIp">Obtener IP</a></li>
+                        <li><a href="{{ url('/getIp') }}">Obtener IP</a></li>
                     @endif
 
                     <li>

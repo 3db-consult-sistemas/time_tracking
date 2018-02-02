@@ -16,6 +16,6 @@ return [
     |
     */
 
-    'close_after' => 30 //300,
+    'close_after' => 300,
 
 ];

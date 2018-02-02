@@ -65,4 +65,10 @@
 
 </div>
 
+<script type="text/javascript">
+    setInterval(() => {
+        location.reload();
+    }, 600000);
+</script>
+
 @endsection
