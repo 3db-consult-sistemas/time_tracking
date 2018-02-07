@@ -175,8 +175,9 @@ class RecordRepository
     protected function groupByDay($data)
     {
         $query = $this->all($data);
+        $seconds = config('options.add_seconds_to_aggregate');
 
-        return "SELECT user_name, user_id, _date, _month, _week, SUM(secs) as secs, hoursToWork FROM ({$query}) as tmp
+        return "SELECT user_name, user_id, _date, _month, _week, SUM(secs) + {$seconds} as secs, hoursToWork FROM ({$query}) as tmp
                 GROUP BY user_id, _date, _week, _month, hoursToWork
                 ORDER BY user_name ASC, _date DESC";
     }

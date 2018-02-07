@@ -18,4 +18,17 @@ return [
 
     'close_after' => 300,
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Add Seconds To Aggregate
+    |--------------------------------------------------------------------------
+    |
+    | Numero de minutos que se suma al agregado por dia para compesar el inicio
+    | de sesión.
+    |
+    */
+
+    'add_seconds_to_aggregate' => 300,
+
 ];
