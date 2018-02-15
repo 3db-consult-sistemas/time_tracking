@@ -18,7 +18,7 @@
 
         <div class="collapse navbar-collapse" id="app-navbar-collapse">
             <!-- Left Side Of Navbar-->
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav hidden-xs">
                 @auth
                     <li><a href="{{ url('/summary') }}">Resumen</a></li>
                     @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))

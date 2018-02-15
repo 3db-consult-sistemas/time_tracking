@@ -41,6 +41,8 @@ class HomeController extends Controller
 
         $status = $this->recordRepository->status($userId);
 
-        return view('home.index', compact('entries', 'status'));
+        $lastRecord = $this->recordRepository->lastCheckIn($userId);
+
+        return view('home.index', compact('entries', 'status', 'lastRecord'));
     }
 }

@@ -22,6 +22,21 @@ class RecordRepository
     }
 
     /**
+     * Obtengo el ultimo check in realizado.
+     *
+     * @param $userId
+     * @return void
+     */
+    public function lastCheckIn($userId)
+    {
+        return $this->getModel()
+            ->where('user_id', $userId)
+            ->whereNotNull('check_out')
+            ->orderBy('check_out', 'desc')
+            ->first();
+    }
+
+    /**
      * Obtengo el estado actual del usuario.
      *
      * @param $userId

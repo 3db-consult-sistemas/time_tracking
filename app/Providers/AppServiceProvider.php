@@ -15,6 +15,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // Localization Carbon
+        \Carbon\Carbon::setLocale(config('app.locale'));
+
+        // Default string length
         Schema::defaultStringLength(191);
 
         \View::composer([

@@ -8,10 +8,16 @@
 }
 
 /*
- * Tamaño fijo para botones
+ * Tamaño para botones
  */
 .custom-btn-width {
     width: 100px;
+}
+
+@media (max-width:768px){
+    .custom-btn-mobile {
+        height: 250px;
+    }
 }
 
 /*
@@ -23,11 +29,4 @@
 
 .table td {
     vertical-align: middle !important;
-}
-
-
-.select2-container--default .select2-selection--single {
-    background-color: #fff;
-    border: 1px solid #aaa;
-    border-radius: 0px;
 }

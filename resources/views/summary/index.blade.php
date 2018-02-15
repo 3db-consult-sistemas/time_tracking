@@ -23,12 +23,16 @@
                 </div>
 
                 <div class="panel-body">
-                    @if ($data['aggregate'] == 'day')
-                        @include ('summary.table.day')
-                    @elseif  ($data['aggregate'] == 'week')
-                        @include ('summary.table.week')
-                    @elseif  ($data['aggregate'] == 'record')
-                        @include ('summary.table.record')
+                    @if (count($entries) > 0)
+                        @if ($data['aggregate'] == 'day')
+                            @include ('summary.table.day')
+                        @elseif  ($data['aggregate'] == 'week')
+                            @include ('summary.table.week')
+                        @elseif  ($data['aggregate'] == 'record')
+                            @include ('summary.table.record')
+                        @endif
+                    @else
+                        No hay datos para el filtro actual.
                     @endif
                 </div>
             </div>
