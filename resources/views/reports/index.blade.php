@@ -15,13 +15,32 @@
                 <div class="panel-heading">Reportes</div>
                 <div class="panel-body">
 
-                    <form class="form" method="GET" action="/download">
+                    <form class="form" method="GET" action="{{ url('/download') }}">
                         <div class="row">
 
                             <div class='col-xs-12'>
                                 <div class="form-group">
                                     <label>Nombre</label>
+                                    <!--
                                     <input name="userName" type="text" class="form-control" value="{{ old('userName') }}" placeholder="Nombre" autocomplete="off">
+-->
+
+                                    <input list="userNames"
+                                        name="userName"
+                                        value="{{ old('userName') }}"
+                                        class="form-control"
+                                        placeholder="Nombre"
+                                        autocomplete="off">
+
+                                    <datalist id="userNames">
+                                        @foreach ($users as $user)
+                                            <option value="{{ $user->username }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </datalist>
+
+
+
+
                                 </div>
                             </div>
 
@@ -71,6 +90,10 @@
     </div>
 </div>
 
+@endsection
+
+@push('head')
+
 <script type="text/javascript">
     $(function () {
         $('#dtpFrom').datetimepicker({
@@ -91,4 +114,4 @@
     });
 </script>
 
-@endsection
+@endpush

@@ -1,9 +1,20 @@
-<form class="form-inline pull-right" method="GET" action="/summary">
+<form class="form-inline pull-right" method="GET" action="{{ url('/summary') }}">
 
     @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
-        <div class="form-group">
-            <input name="name" id="idName" type="text" class="form-control input-sm" placeholder="Nombre" value="{{ $data['name'] ?? '' }}" autocomplete="off" autofocus>
-        </div>
+
+        <input list="userNames"
+               name="userName"
+               value="{{ isset($data['userName']) ? $data['userName'] : '' }}"
+               placeholder="Nombre"
+               class="form-control input-sm"
+               autocomplete="off">
+
+        <datalist id="userNames">
+            @foreach ($users as $user)
+                <option value="{{ $user->username }}">{{ $user->name }}</option>
+            @endforeach
+        </datalist>
+
     @endif
 
     <div class="form-group">
@@ -14,13 +25,4 @@
         </select>
     </div>
 
-    <script>
-        document.getElementById('idName').onkeypress = function(e) {
-            var event = e || window.event;
-            var charCode = event.which || event.keyCode;
-
-            if ( charCode == '13' )
-                this.form.submit();
-        }
-    </script>
 </form>

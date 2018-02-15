@@ -17,7 +17,7 @@
 
                     @include('summary.filter')
 
-                    <h3 class="panel-title" style="margin-top:.4em;">Resumen Mensual</h3>
+                    <h3 class="panel-title" style="margin-top:.4em;">Resumen</h3>
 
                     <div class="clearfix"></div>
                 </div>

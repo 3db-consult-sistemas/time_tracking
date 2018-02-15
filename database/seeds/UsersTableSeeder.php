@@ -24,7 +24,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'diego.membibre@3dbconsult.com',
             'role'  => 'admin'
         ]);
-/*
+
         $user = factory(App\User::class)->create([
             'username'  => 'admin.user',
             'name'  => 'Admin User',
@@ -37,6 +37,5 @@ class UsersTableSeeder extends Seeder
             'name'  => 'Regular User',
             'email' => 'user@3dbconsult.com'
         ]);
-*/
     }
 }

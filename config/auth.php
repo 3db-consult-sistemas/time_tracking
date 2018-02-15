@@ -66,7 +66,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'adldap', // Changed from 'eloquent'
+            'driver' => 'eloquent', // Changed from 'eloquent' adldap
             'model' => App\User::class,
         ],
 

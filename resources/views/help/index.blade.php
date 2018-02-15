@@ -40,7 +40,9 @@
     </div>
 </div>
 
+@endsection
 
+@push('head')
 <script>
 $(document).ready(function(){
     // Add smooth scrolling to all links in navbar + footer link
@@ -62,5 +64,4 @@ $(document).ready(function(){
     });
 })
 </script>
-
-@endsection
+@endpush

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\RecordRequest;
@@ -17,9 +18,12 @@ class RecordsController extends Controller
      *
      * @return void
      */
-    public function __construct(RecordRepository $recordRepository)
+    public function __construct(
+        RecordRepository $recordRepository,
+        UserRepository $userRepository)
     {
         $this->recordRepository = $recordRepository;
+        $this->userRepository = $userRepository;
 
         $this->middleware('auth');
     }
@@ -32,6 +36,7 @@ class RecordsController extends Controller
     public function index(RecordRequest $request)
     {
         $data = $request->formatData()->all();
+        $users = $this->userRepository->fetch();
 
         if ($data['aggregate'] == 'record') {
             $entries = $this->recordRepository->fetchPaginate($data);
@@ -40,7 +45,8 @@ class RecordsController extends Controller
             $entries = $this->recordRepository->fetch($data);
         }
 
-        return view('summary.index', compact('data', 'entries'));
+        return view('summary.index', compact('data', 'users', 'entries'));
+
     }
 
     /**

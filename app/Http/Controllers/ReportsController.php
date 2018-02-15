@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use App\Model\Helpers;
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
+use App\UserRepository;
 use App\Http\Requests\ReportRequest;
 use App\Model\Record\RecordRepository;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportsController extends Controller
 {
@@ -20,9 +21,12 @@ class ReportsController extends Controller
      *
      * @return void
      */
-    public function __construct(RecordRepository $recordRepository)
+    public function __construct(
+		RecordRepository $recordRepository,
+		UserRepository $userRepository)
     {
-        $this->recordRepository = $recordRepository;
+		$this->recordRepository = $recordRepository;
+		$this->userRepository = $userRepository;
 
         $this->middleware(['auth', 'checkrole:super_admin,admin']);
     }
@@ -34,7 +38,9 @@ class ReportsController extends Controller
      */
     public function index()
     {
-        return view('reports.index');
+		$users = $this->userRepository->fetch();
+
+        return view('reports.index', compact('users'));
 	}
 
     /**
@@ -43,7 +49,7 @@ class ReportsController extends Controller
      */
     public function download(ReportRequest $request)
     {
-		$entries = $this->recordRepository->fetch($request->all());
+		$entries = $this->recordRepository->fetch($request->formatData()->all());
 
 		if (count($entries) == 0) {
 			return redirect()->back()

@@ -177,7 +177,7 @@ class RecordRepository
         $query = $this->all($data);
         $seconds = config('options.add_seconds_to_aggregate');
 
-        return "SELECT user_name, user_id, _date, _month, _week, SUM(secs) + {$seconds} as secs, hoursToWork FROM ({$query}) as tmp
+        return "SELECT user_name, user_id, _date, _month, _week, SUM(secs)+{$seconds} as secs, hoursToWork FROM ({$query}) as tmp
                 GROUP BY user_id, _date, _week, _month, hoursToWork
                 ORDER BY user_name ASC, _date DESC";
     }
@@ -218,12 +218,15 @@ class RecordRepository
                 LEFT JOIN users ON users.id = records.user_id
                 WHERE DATE(records.check_in) >= '{$data['from']}' AND DATE(records.check_in) <= '{$data['to']}'";
 
-        if (is_numeric($data['userName'])) {
-            $query .= " AND records.user_id IN ({$data['userName']})";
+        if (is_numeric($data['userId'])) {
+            $query .= " AND records.user_id = '{$data['userId']}'";
+            // $query .= " AND records.user_id IN ({$data['userName']})";
         }
+        /*
         elseif ($data['userName'] != null) {
             $query .= " AND users.name LIKE '%{$data['userName']}%'";
         }
+        */
 
         return $query .= " ORDER BY user_name ASC, records.check_in DESC";
     }
@@ -235,9 +238,10 @@ class RecordRepository
      */
     public function fetchPaginate($data)
     {
-        $query = $this->getModel()
+        return $this->getModel()
             ->join('users', 'users.id', '=', 'records.user_id')
             ->whereRaw("DATE(records.check_in) >= '{$data['from']}'")
+            ->where('records.user_id', $data['userId'])
             ->select([
                 'users.name',
                 'records.type',
@@ -246,15 +250,18 @@ class RecordRepository
                 DB::raw("TIME(records.check_out) as time_out"),
                 DB::raw("TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs")
             ])
-            ->orderBy('records.check_in', 'desc');
+            ->orderBy('records.check_in', 'desc')
+            ->paginate(15)
+            ->appends($data);
 
+        /*
         if (is_numeric($data['userName'])) {
             $query->where('records.user_id', $data['userName']);
         }
         else if ($data['userName'] != null) {
             $query->where('users.name', 'LIKE', "%{$data['userName']}%");
         }
-
         return $query->paginate(15)->appends($data);
+        */
     }
 }

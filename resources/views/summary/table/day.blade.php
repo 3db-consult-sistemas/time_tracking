@@ -6,7 +6,6 @@
         <thead>
             <tr>
                 <th>Trabajador</th>
-                <th>Semana</th>
                 <th>Fecha</th>
                 <th>Día</th>
                 <th>Trabajado</th>
@@ -26,7 +25,6 @@
                     ?>
 
                     <td>{{ $entry->user_name }}</td>
-                    <td>{{ $entry->_week }}</td>
                     <td>{{ $entry->_date }}</td>
                     <td>{{ date('l', strtotime($entry->_date)) }}</td>
                     <td>{{ Helpers::formatSeconds($entry->secs) }}</td>
@@ -38,7 +36,6 @@
 
         <tfoot style="border-top: 2px solid black;">
             <tr class="{{ $totalDiff < 0 ? 'danger' : 'success' }}">
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\User;
 use App\Model\Helpers;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -27,7 +28,7 @@ class ReportRequest extends FormRequest
     public function rules()
     {
         return [
-            'userName' => 'string|nullable|min:4',
+            'userName' => 'nullable|string',
             'aggregate' => 'required|in:day,week,month,record',
             'from' => 'required|date_format:"Y-m-d"|before_or_equal:to',
             'to' => 'required|date_format:"Y-m-d"|after_or_equal:from'
@@ -44,10 +45,10 @@ class ReportRequest extends FormRequest
     {
         $validator->after(function ($validator) {
 
-            $userName = $this->get('userName');
-            $aggregate = $this->get('aggregate');
-            $from = $this->toCarbon($this->get('from'), 'Y-m-d');
-            $to = $this->toCarbon($this->get('to'), 'Y-m-d');
+            $userName = $this['userName'];
+            $aggregate = $this['aggregate'];
+            $from = $this->toCarbon($this['from'], 'Y-m-d');
+            $to = $this->toCarbon($this['to'], 'Y-m-d');
             $diff = $from->diffInDays($to);
 
             if ($userName == null) {
@@ -57,6 +58,11 @@ class ReportRequest extends FormRequest
 
                 if ($aggregate == 'day' && $diff > 31) {
                     return $validator->errors()->add('aggregate', 'No se puede exportar mas de un mes de todos los usuarios a nivel de día.');
+                }
+            }
+            else {
+                if (User::where('username', $this['userName'])->first() == null) {
+                    return $validator->errors()->add('aggregate', 'No existe el usuario indicado.');
                 }
             }
 
@@ -76,5 +82,25 @@ class ReportRequest extends FormRequest
                 return $validator->errors()->add('aggregate', 'No se puede exportar el agregado diario de mas de 3 meses.');
             }
         });
+    }
+
+    /**
+     * Format the input data to process.
+     *
+     * @return array
+     */
+    public function formatData()
+    {
+        $this['userId'] = null;
+
+        if (! isset($this['userName']) || $this['userName'] == null) {
+            return $this;
+        }
+
+        if (($user = User::where('username', $this['userName'])->first()) != null) {
+            $this['userId'] = $user->id;
+        }
+
+        return $this;
     }
 }

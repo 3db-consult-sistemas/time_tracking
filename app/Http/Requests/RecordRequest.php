@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +27,7 @@ class RecordRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'string|nullable|min:4',
+            'userName' => 'nullable|string',
             'aggregate' => 'in:day,week,record'
         ];
     }
@@ -41,14 +42,17 @@ class RecordRequest extends FormRequest
         $this['aggregate'] = $this['aggregate'] != null ? $this['aggregate'] : 'day';
         $this['from'] = Carbon::now()->startOfMonth()->format('Y-m-d');
         $this['to'] = Carbon::now()->format('Y-m-d');
-        $this['userName'] = auth()->id();
+        $this['userId'] = auth()->id();
 
-        if (Gate::check('checkrole', 'super_admin') ||
-            Gate::check('checkrole', 'admin') &&
-            $this['name'] != null) {
-            $this['name'] = $this['name'];
-            $this['userName'] = $this['name'];
+        if (! (Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin')) ||
+            ! isset($this['userName']) || $this['userName'] == null ||
+            auth()->user()->username == $this['userName']) {
+            return $this;
         }
+
+        $this['userId'] = ($user = User::where('username', $this['userName'])->first()) != null
+            ? $user->id
+            : 0;
 
         return $this;
     }
