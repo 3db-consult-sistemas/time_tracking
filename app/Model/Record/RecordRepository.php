@@ -3,11 +3,14 @@
 namespace App\Model\Record;
 
 use Carbon\Carbon;
+use App\Model\Helpers;
 use App\Model\Record\Record;
 use Illuminate\Support\Facades\DB;
 
 class RecordRepository
 {
+    use Helpers;
+
 	/**
 	 * Instantiate a repository's model.
 	 *
@@ -73,6 +76,7 @@ class RecordRepository
     public function create($data)
     {
         $data['check_in'] = Carbon::now();
+        $data['ip'] = ip2long($this->getIp());
 
         return $this->getModel()->create($data);
     }
@@ -189,6 +193,8 @@ class RecordRepository
      */
     protected function all($data)
     {
+        // INET_NTOA(records.ip) as ip,
+
         $query = "SELECT
                 users.name as user_name,
                 records.user_id,
@@ -220,13 +226,7 @@ class RecordRepository
 
         if (is_numeric($data['userId'])) {
             $query .= " AND records.user_id = '{$data['userId']}'";
-            // $query .= " AND records.user_id IN ({$data['userName']})";
         }
-        /*
-        elseif ($data['userName'] != null) {
-            $query .= " AND users.name LIKE '%{$data['userName']}%'";
-        }
-        */
 
         return $query .= " ORDER BY user_name ASC, records.check_in DESC";
     }
@@ -248,20 +248,11 @@ class RecordRepository
                 DB::raw("DATE(records.check_in) as date"),
                 DB::raw("TIME(records.check_in) as time_in"),
                 DB::raw("TIME(records.check_out) as time_out"),
-                DB::raw("TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs")
+                DB::raw("TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs"),
+                DB::raw("INET_NTOA(records.ip) as ip")
             ])
             ->orderBy('records.check_in', 'desc')
             ->paginate(15)
             ->appends($data);
-
-        /*
-        if (is_numeric($data['userName'])) {
-            $query->where('records.user_id', $data['userName']);
-        }
-        else if ($data['userName'] != null) {
-            $query->where('users.name', 'LIKE', "%{$data['userName']}%");
-        }
-        return $query->paginate(15)->appends($data);
-        */
     }
 }

@@ -84,6 +84,7 @@ class AbsenceRequests extends FormRequest
             'id' => $this->route('entryId'),
             'user_id' => auth()->id(),
             'type' => $type,
+            'ip' => ip2long($this->getIp()),
             'comments' => $this->get('comments'),
             'check_in' => $this['from'],
             'duration' => $this['duration']

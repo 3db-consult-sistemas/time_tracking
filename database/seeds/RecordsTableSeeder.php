@@ -23,23 +23,25 @@ class RecordsTableSeeder extends Seeder
         for ($i=1; $i <= 10; $i++) {
             foreach ($users as $user) {
                 $date = $startDate->copy()->addDay($i)->format('Y-m-d');
+                $ip = $faker->numberBetween(188888888 , 9999999999 );
 
                 $checkIn = Carbon::createFromTimeStamp($faker->dateTimeBetween("{$date} 08:20:00", "{$date} 09:10:00")->getTimestamp());
                 $checkOut = $checkIn->copy()->addMinutes($faker->numberBetween(180, 360));
-                $this->createEntry($user->id, $checkIn, $checkOut);
+                $this->createEntry($user->id, $checkIn, $checkOut, $ip);
 
                 $checkIn = $checkOut->addMinutes($faker->numberBetween(30, 70));
                 $checkOut = $checkIn->copy()->addMinutes($faker->numberBetween(120, 240));
-                $this->createEntry($user->id, $checkIn, $checkOut);
+                $this->createEntry($user->id, $checkIn, $checkOut, $ip);
             }
         }
     }
 
-    private function createEntry($id, $checkIn, $checkOut) {
+    private function createEntry($id, $checkIn, $checkOut, $ip) {
         Record::create([
             'user_id' => $id,
             'check_in' => $checkIn,
-            'check_out' => $checkOut
+            'check_out' => $checkOut,
+            'ip' => $ip
         ]);
     }
 }

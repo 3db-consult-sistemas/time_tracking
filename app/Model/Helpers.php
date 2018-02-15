@@ -35,6 +35,11 @@ trait Helpers
         return sprintf("%s%02d:%02d:%02d", $symbol, $hours, $minutes, $seconds);
     }
 
+    /**
+     * Obtengo la IP del cliente.
+     *
+     * @return ip
+     */
     public static function getIp() {
         if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
             return $_SERVER['HTTP_CLIENT_IP'];

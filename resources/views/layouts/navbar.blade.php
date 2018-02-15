@@ -43,10 +43,6 @@
                     <li><a href="{{ route('login') }}">Login</a></li>
                 @else
 
-                    @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
-                        <li><a href="{{ url('/getIp') }}">Obtener IP</a></li>
-                    @endif
-
                     <li>
                         <a href="{{ route('logout') }}"
                             onclick="event.preventDefault();
