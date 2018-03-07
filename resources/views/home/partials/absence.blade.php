@@ -55,7 +55,7 @@
 
             <div class="form-group">
                 <label>Duranción (minutos):</label>
-                <input name="duration" id="idDuration" type="number" value="{{ old('duration', 5) }}" class="form-control" min="1" max="540">
+                <input name="duration" id="idDuration" type="number" value="{{ old('duration', 15) }}" class="form-control" min="1" max="540">
             </div>
         </div>
 

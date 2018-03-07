@@ -8,6 +8,7 @@
                 <th>Hora Inicio</th>
                 <th>Hora Final</th>
                 <th>Tiempo</th>
+                <th>Comentario</th>
                 <!--<th>Dirección IP</th>-->
             </tr>
         </thead>
@@ -20,6 +21,7 @@
                     <td>{{ $entry->time_in }}</td>
                     <td>{{ $entry->time_out }}</td>
                     <td>{{ Helpers::formatSeconds($entry->secs) }}</td>
+                    <td>{{ strlen($entry->comments) > 20 ? substr($entry->comments, 0, 20) . '...' : $entry->comments }}</td>
                     <!--<td>{{ $entry->ip }}</td>-->
                 </tr>
             @endforeach

@@ -19,7 +19,7 @@
                     <td>
                         <span class="label {{ $ticket->status == 'open' ? 'label-danger' : 'label-info' }}">{{ $ticket->status }}</span>
                     </td>
-                    <td>{{ $ticket->user->name }}</td>
+                    <td><a href="{{ url('/summary?userName=' . $ticket->user->username . '&amp;aggregate=day') }}">{{ $ticket->user->name }}</a></td>
                     <td>{{ $ticket->record->type }}</td>
                     <td>{{ $ticket->record->check_in }}</td>
                     <td><a class="btn btn-default btn-block btn-sm" href="{{ route('tickets.edit', $ticket) }}">Detalles</a></td>
@@ -32,5 +32,5 @@
 {{ $tickets->links() }}
 
 @else
-    <p>No hay ticketsabiertos o cerrados para visualizar.</p>
+    <p>No hay tickets abiertos o cerrados para visualizar.</p>
 @endif

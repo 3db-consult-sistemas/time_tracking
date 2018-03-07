@@ -217,9 +217,9 @@ class RecordRepository
                 WEEK(records.check_in, 1)  as _week,
                 MONTH(records.check_in)  as _month,
                 records.type,
+                records.comments,
                 records.check_in,
                 records.check_out,
-                records.comments,
                 TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs,
                 (SELECT CASE DATE_FORMAT(records.check_in, '%w')
                     WHEN 0 THEN tmp.sunday
@@ -255,7 +255,7 @@ class RecordRepository
     {
         return $this->getModel()
             ->join('users', 'users.id', '=', 'records.user_id')
-            ->whereRaw("DATE(records.check_in) >= '{$data['from']}'")
+            //->whereRaw("DATE(records.check_in) >= '{$data['from']}'")
             ->where('records.user_id', $data['userId'])
             ->select([
                 'users.name',
@@ -264,6 +264,7 @@ class RecordRepository
                 DB::raw("TIME(records.check_in) as time_in"),
                 DB::raw("TIME(records.check_out) as time_out"),
                 DB::raw("TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs"),
+                'records.comments',
                 DB::raw("INET_NTOA(records.ip) as ip")
             ])
             ->orderBy('records.check_in', 'desc')

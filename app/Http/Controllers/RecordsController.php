@@ -56,6 +56,10 @@ class RecordsController extends Controller
      */
     public function checkIn()
     {
+        if ($this->recordRepository->active(auth()->id()) != null) {
+            return redirect()->back();
+        }
+
         if(! $this->recordRepository->create(['user_id' => auth()->id()])) {
             return redirect()->back()
                 ->withErrors(['No se ha podido realizar el Check-In.']);

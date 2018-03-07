@@ -107,15 +107,15 @@ class ReportsController extends Controller
 			if (property_exists($item, '_date')) $entry['fecha'] = $item->_date;
 			$entry['mes'] = $item->_month;
 			if (property_exists($item, '_week')) $entry['semana'] = $item->_week;
+			if (property_exists($item, 'type')) $entry['tipo'] = $item->type;
+			if (property_exists($item, 'comments')) $entry['comentarios'] = $item->comments;
 			if (property_exists($item, 'type')) {
-				$entry['tipo'] = $item->type;
 				$entry['check_In'] = $item->check_in;
 				$entry['check_Out'] = $item->check_out;
 			}
 			$entry['trabajado'] = $this->formatSeconds($item->secs);
 			$entry['estimado'] = $this->formatSeconds($item->hoursToWork);
 			if (property_exists($item, 'average')) $entry['tiempo_medio'] = $this->formatSeconds($item->average);
-			if (property_exists($item, 'comments')) $entry['comentarios'] = $item->comments;
 			return $entry;
 
 			/*

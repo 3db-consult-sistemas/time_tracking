@@ -40,7 +40,8 @@ class RecordRequest extends FormRequest
     public function formatData()
     {
         $this['aggregate'] = $this['aggregate'] != null ? $this['aggregate'] : 'day';
-        $this['from'] = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $this['from'] = Carbon::now()->subWeeks(6)->format('Y-m-d');
+        //$this['from'] = Carbon::now()->startOfMonth()->format('Y-m-d');
         $this['to'] = Carbon::now()->format('Y-m-d');
         $this['userId'] = auth()->id();
 
