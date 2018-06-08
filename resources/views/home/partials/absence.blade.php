@@ -74,7 +74,7 @@
 
                 // Al deseleccionar la ausencia programada reinicio los input.
                 $('#absenceOptions').on('hidden.bs.collapse', function () {
-                    $('#idDuration').val('5');
+                    $('#idDuration').val('15');
                     $('#idFrom').val('');
                 })
             });

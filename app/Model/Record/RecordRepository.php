@@ -181,9 +181,9 @@ class RecordRepository
     {
         $query = $this->groupByDay($data);
 
-        return "SELECT user_name, user_id, _month, _week, SUM(secs) as secs, AVG(secs) as average, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
-            GROUP BY user_id, _week, _month
-            ORDER BY user_name ASC, _month DESC, _week DESC";
+        return "SELECT user_name, user_id, _week, SUM(secs) as secs, AVG(secs) as average, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
+            GROUP BY user_id, _week
+            ORDER BY user_name ASC, _week DESC";
     }
 
     /**

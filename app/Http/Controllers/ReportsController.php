@@ -105,7 +105,7 @@ class ReportsController extends Controller
 			$entry = [];
 			$entry['nombre'] = $item->user_name;
 			if (property_exists($item, '_date')) $entry['fecha'] = $item->_date;
-			$entry['mes'] = $item->_month;
+			if (property_exists($item, '_month')) $entry['mes'] = $item->_month;
 			if (property_exists($item, '_week')) $entry['semana'] = $item->_week;
 			if (property_exists($item, 'type')) $entry['tipo'] = $item->type;
 			if (property_exists($item, 'comments')) $entry['comentarios'] = $item->comments;
