@@ -37,6 +37,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the tickets records associated with the user.
+     */
+    public function closedTickets()
+    {
+        return $this->hasMany(\App\Model\Ticket\Ticket::class, 'closed_by_id');
+    }
+
+    /**
      * Get the records associated with the user.
      */
     public function records()

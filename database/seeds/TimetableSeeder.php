@@ -6,7 +6,7 @@ use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class TimetableSeeder extends Seeder
+class TimeTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -20,7 +20,7 @@ class TimetableSeeder extends Seeder
         $startDate = Carbon::now()->subDay(10);
 
         foreach ($users as $user) {
-            $this->createEntry($user->id, $startDate, 25200);   // 07:00
+            $this->createEntry($user->id, $startDate, 25200); // 07:00
 
             if ($faker->boolean(60) || $user->id == 1) {
                 $date = $faker->dateTimeBetween($startDate->copy()->addDay(7), Carbon::now());

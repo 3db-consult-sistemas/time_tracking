@@ -17,6 +17,7 @@ class CreateTicketsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('record_id');
+            $table->unsignedInteger('closed_by_id')->nullable();
             $table->enum('status', ['open', 'close'])->default('open');
             $table->string('comments')->nullable();
             $table->timestamps();
@@ -27,6 +28,10 @@ class CreateTicketsTable extends Migration
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
+
+            $table->foreign('closed_by_id')
+                ->references('id')
+                ->on('users');
 
             $table->foreign('record_id')
                 ->references('id')

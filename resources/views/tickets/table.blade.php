@@ -8,7 +8,8 @@
                 <th>Estado</th>
                 <th>Trabajador</th>
                 <th>Tipo</th>
-                <th>Inicio de Registro</th>
+                <th>Check In</th>
+                <th>Cerrado Por</th>
                 <th></th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                     <td><a href="{{ url('/summary?userName=' . $ticket->user->username . '&amp;aggregate=day') }}">{{ $ticket->user->name }}</a></td>
                     <td>{{ $ticket->record->type }}</td>
                     <td>{{ $ticket->record->check_in }}</td>
+                    <td>{{ $ticket->closedBy->name ?? '-' }}</td>
                     <td><a class="btn btn-default btn-block btn-sm" href="{{ route('tickets.edit', $ticket) }}">Detalles</a></td>
                 </tr>
             @endforeach

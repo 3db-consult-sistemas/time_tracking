@@ -24,7 +24,7 @@ class Ticket extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'status', 'comments',
+        'user_id', 'record_id', 'closed_by_id', 'status', 'comments',
     ];
 
     /**
@@ -41,5 +41,13 @@ class Ticket extends Model
     public function user()
     {
         return $this->belongsTo(\App\User::class);
+    }
+
+    /**
+     * Get the user that owns the ticket.
+     */
+    public function closedBy()
+    {
+        return $this->belongsTo(\App\User::class, 'closed_by_id');
     }
 }

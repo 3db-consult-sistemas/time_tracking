@@ -13,19 +13,9 @@
         <div class="col-md-10 col-md-offset-1">
 
             <div class="panel panel-default">
-                <div class="panel-heading"><h3 class="panel-title">Registro</h3></div>
-                <div class="panel-body">
-                    <p><strong>Trabajador:</strong> {{ $ticket->user->name }}</p>
-                    <p><strong>Tipo:</strong> {{ $ticket->record->type }}</p>
-                    <p><strong>Check In:</strong> {{ $ticket->record->check_in }}</p>
-                    <p><strong>Check Out:</strong> {{ $ticket->status == 'open' ? 'N/A' : $ticket->record->check_out }}</p>
-                    <p><strong>Comentarios:</strong> {{ $ticket->record->comments == null ? 'N/A' : $ticket->record->comments }}</p>
-                </div>
-            </div>
-
-            <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title" >Tickets
+
+                    <h3 class="panel-title">Ticket
                         <div class="pull-right">
                             <span class="label {{ $ticket->status == 'open' ? 'label-danger' : 'label-info' }}">
                                 {{ $ticket->status }}
@@ -35,8 +25,30 @@
                 </div>
 
                 <div class="panel-body">
-                    <p><strong>Creado:</strong> {{ $ticket->created_at }}</p>
-                    <p><strong>Ultima Actualización:</strong> {{ $ticket->updated_at }}</p>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                            <p><strong>Trabajador:</strong> {{ $ticket->user->name }}</p>
+                            <p><strong>Tipo:</strong> {{ $ticket->record->type }}</p>
+                            <p><strong>Check In:</strong> {{ $ticket->record->check_in }}</p>
+
+                            @if ($ticket->status == 'close')
+                                <p><strong>Check Out:</strong> {{ $ticket->record->check_out }}</p>
+                            @endif
+                        </div>
+
+                        @if ($ticket->status == 'close')
+                            <div class="col-xs-12 col-sm-6">
+                                <p><strong>Fecha de Cierre:</strong> {{ $ticket->updated_at }}</p>
+                                <p><strong>Cerrado por:</strong> {{ $ticket->closedBy->name ?? '-' }}</p>
+                            </div>
+
+                            <div class="col-xs-12">
+                                <hr>
+                                <p><strong>Comentarios del Ticket:</strong></p><p>{{ $ticket->comments ?? '-' }}</p>
+                            </div>
+                        @endif
+                    </div>
 
                     @if ($ticket->status == 'open')
                         <hr>
@@ -47,7 +59,7 @@
                             <div class="form-group">
                                 <label>Check Out:</label>
                                 <div class='input-group date' id='dtp'>
-                                    <input name="check_out" id="dtp" type='text' class="form-control" value="{{ old('check_out') }}"/>
+                                    <input name="check_out" id="dtp" type='text' class="form-control" value="{{ old('check_out') }}" autocomplete="off"/>
                                     <span class="input-group-addon">
                                         <i class="fa fa-calendar" aria-hidden="true"></i>
                                     </span>
@@ -81,18 +93,15 @@
                                 });
                             });
                         </script>
-
-                    @else
-                        <p><strong>Comentarios:</strong> {{ $ticket->comments }}</p>
                     @endif
-
-                    <hr>
-                    <div class="form-group pull-right">
-                        <a class="btn btn-default" href="{{ url('/tickets') }}">Volver</a>
-                    </div>
 
                 </div>
             </div>
+
+            <div class="form-group pull-right">
+                <a class="btn btn-default" href="{{ url('/tickets') }}">Volver</a>
+            </div>
+
         </div>
     </div>
 </div>

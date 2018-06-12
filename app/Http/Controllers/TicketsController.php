@@ -2,22 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Helpers;
+use App\UserRepository;
 use App\Model\Ticket\Ticket;
 use Illuminate\Http\Request;
+use App\Model\Ticket\TicketRepository;
 use Illuminate\Support\Facades\Validator;
 
 class TicketsController extends Controller
 {
-    use Helpers;
+    protected $ticketRepository, $recordRepository;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        TicketRepository $ticketRepository,
+        UserRepository $userRepository)
     {
+        $this->ticketRepository = $ticketRepository;
+        $this->userRepository = $userRepository;
+
         $this->middleware(['auth', 'checkrole:super_admin,admin']);
     }
 
@@ -26,15 +32,16 @@ class TicketsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tickets = Ticket::with('record', 'user')
-            ->orderBy('status')
-            ->latest()
-            ->paginate(15);
+        $userName = $request->get('userName');
 
-        return view('tickets.index', compact('tickets'));
-	}
+        $users = $this->userRepository->fetch();
+
+        $tickets = $this->ticketRepository->ticketsByUserName($request->all());
+
+        return view('tickets.index', compact('users', 'userName', 'tickets'));
+    }
 
     /**
      * Visualizo la edicion de tickets.
@@ -55,26 +62,14 @@ class TicketsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'comments' => 'string|nullable|max:191',
-            'check_out' => 'date_format:"Y-m-d H:i"|before_or_equal:now',
+            'check_out' => 'date_format:"Y-m-d H:i"|after:' . $ticket->record->check_in->format('Y-m-d H:i'),
 		]);
 
 		if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
 
-        if (($checkOut = $this->toCarbon($request['check_out'])) <= $ticket->record->check_in) {
-            return redirect()->back()
-                ->withInput()
-                ->withErrors(['The check out must be a date greater than check in.']);
-        }
-
-        $record = $ticket->record;
-        $record->check_out = $checkOut;
-        $record->save();
-
-        $ticket->comments = $request->get('comments');
-        $ticket->status = 'close';
-        $ticket->save();
+        $this->ticketRepository->closeTicket($ticket, $request);
 
         return redirect('tickets');
     }
