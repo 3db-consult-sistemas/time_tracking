@@ -36,6 +36,19 @@ trait Helpers
     }
 
     /**
+     * Doy formato decimal los segundos de entrada.
+     *
+     * @param  $seconds
+     * @return string
+     */
+    public static function formatSecondsToDecimal($seconds) {
+        $symbol = $seconds < 0 ? '-' : '';
+        $seconds = abs($seconds);
+        $hours = $seconds/3600;
+        return sprintf("%s%.2f", $symbol, $hours);
+    }
+
+    /**
      * Obtengo la IP del cliente.
      *
      * @return ip

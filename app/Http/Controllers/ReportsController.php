@@ -113,9 +113,9 @@ class ReportsController extends Controller
 				$entry['check_In'] = $item->check_in;
 				$entry['check_Out'] = $item->check_out;
 			}
-			$entry['trabajado'] = $this->formatSeconds($item->secs);
-			$entry['estimado'] = $this->formatSeconds($item->hoursToWork);
-			if (property_exists($item, 'average')) $entry['tiempo_medio'] = $this->formatSeconds($item->average);
+			$entry['trabajado'] = (float) $this->formatSecondsToDecimal($item->secs);
+			$entry['estimado'] = (float) $this->formatSecondsToDecimal($item->hoursToWork);
+			if (property_exists($item, 'average')) $entry['tiempo_medio'] = (float) $this->formatSecondsToDecimal($item->average);
 			return $entry;
 
 			/*
