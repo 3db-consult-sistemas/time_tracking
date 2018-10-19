@@ -4,10 +4,22 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
+            @include ('layouts.errors')
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Users</h3>
+
+                    @include('users.filter')
+
+                    <h3 class="panel-title" style="margin-top:.4em;">Users</h3>
+
+                    <div class="clearfix"></div>
+
                 </div>
 
                 <div class="panel-body">

@@ -28,11 +28,20 @@ class UsersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->userRepository->fetch();
+        $validator = Validator::make($request->all(), [
+            'enabled' => 'nullable|boolean',
+    	]);
 
-        return view('users.index', compact('users'));
+		if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        $enabled = $request->input('enabled', '1');
+        $users = $this->userRepository->fetch($enabled);
+
+        return view('users.index', compact('enabled', 'users'));
     }
 
     /**
@@ -67,6 +76,25 @@ class UsersController extends Controller
         }
 
         $user->role = $request['role'];
+        $user->save();
+
+        return redirect('users');
+    }
+
+    /**
+     * Habilito o deshabilito el usuario.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function enable(User $user)
+    {
+        if ($user->id == auth()->id()) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['You cannot enable/disable your own user.']);
+        }
+
+        $user->enabled = ! $user->enabled;
         $user->save();
 
         return redirect('users');

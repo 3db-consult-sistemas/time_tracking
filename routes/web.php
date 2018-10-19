@@ -40,6 +40,7 @@ Route::patch('/tickets/{ticket}', 'TicketsController@update');
 Route::get('/users', 'UsersController@index');
 Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');
 Route::patch('/users/{user}/role', 'UsersController@updateRole')->name('users.update.role');
+Route::patch('/users/{user}/enable', 'UsersController@enable')->name('users.enable');;
 
 Route::post('/timetable', 'TimetablesController@store');
 Route::delete('/timetable/{id}', 'TimetablesController@destroy');

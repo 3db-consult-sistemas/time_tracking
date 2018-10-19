@@ -37,5 +37,12 @@ class UsersTableSeeder extends Seeder
             'name'  => 'Regular User',
             'email' => 'user@3dbconsult.com'
         ]);
+
+        $user = factory(App\User::class)->create([
+            'username'  => 'regular.user.disable',
+            'name'  => 'Regular User Disabled',
+            'email' => 'user.disabled@3dbconsult.com',
+            'enabled' => false
+        ]);
     }
 }
