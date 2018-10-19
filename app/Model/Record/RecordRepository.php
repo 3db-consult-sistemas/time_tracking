@@ -102,11 +102,14 @@ class RecordRepository
      * @param $id
      * @return boolean
      */
-    public function close($id)
+    public function close($id, $comments = null)
     {
  		return $this->getModel()
 			->where('id', $id)
-			->update(['check_out' => Carbon::now()]);
+            ->update([
+                'check_out' => Carbon::now(),
+                'comments' => $comments
+            ]);
     }
 
     /**

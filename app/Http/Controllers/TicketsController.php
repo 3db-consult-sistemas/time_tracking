@@ -61,7 +61,7 @@ class TicketsController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         $validator = Validator::make($request->all(), [
-            'comments' => 'string|nullable|max:191',
+            'comments' => 'required|string|max:191',
             'check_out' => 'date_format:"Y-m-d H:i"|after:' . $ticket->record->check_in->format('Y-m-d H:i'),
 		]);
 

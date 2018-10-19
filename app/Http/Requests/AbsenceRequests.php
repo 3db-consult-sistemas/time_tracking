@@ -54,6 +54,11 @@ class AbsenceRequests extends FormRequest
                 $validator->errors()->add('action', 'Ausencia programada finalizada, no se puede cancelar.');
             }
 
+            // creando ausencia, compruebo que tenga comentario.
+            if ($this->get('action') == 'open' && $this->get('comments') == null) {
+                $validator->errors()->add('comments', 'Comentario obligatorio al programar una ausencia.');
+            }
+
             // compruebo que la fecha programada sea al menos 10 minutos superior a la actual.
             if (($dateTime = $this->toCarbon($this->get('from'))) != null) {
                 if ($dateTime <= Carbon::now()->addMinute(10)) {

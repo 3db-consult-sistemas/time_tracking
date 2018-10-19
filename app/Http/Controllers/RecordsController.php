@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\RecordRequest;
 use App\Http\Requests\AbsenceRequests;
 use App\Model\Record\RecordRepository;
@@ -71,12 +72,17 @@ class RecordsController extends Controller
     /**
      * Realizo el 'check out' para el usuario autenticado.
      *
-     * @param  $entryId
      * @return redirect
      */
-    public function checkOut($entryId)
+    public function checkOut(Request $request, $entryId)
     {
-        if(! $this->recordRepository->close($entryId)) {
+        $validator = Validator::make($request->all(), ['check_out_comment' => 'string|nullable|max:191']);
+
+		if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        if(! $this->recordRepository->close($entryId, $request->input('check_out_comment'))) {
             return redirect()->back()
                 ->withErrors(['No se ha podido realizar el Check-Out.']);
 		}

@@ -30,7 +30,7 @@
                     style="resize:none"
                     rows="3"
                     autocomplete="off"
-                    placeholder="Comentarios...">{{ old('comments') }}</textarea>
+                    placeholder="Motivo de ausencia  (OBLIGATORIO)">{{ old('comments') }}</textarea>
         </div>
 
         <div class="form-group">

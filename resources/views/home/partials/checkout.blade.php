@@ -7,4 +7,14 @@
             Check Out
         </button>
     </div>
+
+    <div class="form-group">
+        <textarea name="check_out_comment"
+                class="form-control"
+                style="resize:none"
+                rows="3"
+                autocomplete="off"
+                placeholder="Comentario...">{{ old('check_out_comment') }}</textarea>
+    </div>
+
 </form>
