@@ -19,6 +19,12 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
 
+    <script type="text/javascript">
+        if (typeof window.orientation !== 'undefined') {
+            window.location = '{{ url('mobile') }}';
+        }
+    </script>
+
     @stack('head')
 </head>
 
