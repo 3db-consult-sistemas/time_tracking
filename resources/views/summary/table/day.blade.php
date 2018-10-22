@@ -39,8 +39,8 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>{{ Helpers::formatSeconds($total)  }}</td>
-                <td>{{ Helpers::formatSeconds($totalEstimate)  }}</td>
+                <td>{{ Helpers::formatSeconds($total) }}</td>
+                <td>{{ Helpers::formatSeconds($totalEstimate) }}</td>
                 <td>{{ Helpers::formatSeconds($totalDiff) }}</td>
             </tr>
         </tfoot>

@@ -28,7 +28,7 @@ class ReportsController extends Controller
 		$this->recordRepository = $recordRepository;
 		$this->userRepository = $userRepository;
 
-        $this->middleware(['auth', 'checkrole:super_admin,admin']);
+        $this->middleware(['auth', 'ismobile', 'checkrole:super_admin,admin']);
     }
 
     /**

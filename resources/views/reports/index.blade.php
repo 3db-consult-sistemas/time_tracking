@@ -37,10 +37,6 @@
                                             <option value="{{ $user->username }}">{{ $user->name }}</option>
                                         @endforeach
                                     </datalist>
-
-
-
-
                                 </div>
                             </div>
 

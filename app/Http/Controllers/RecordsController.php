@@ -26,7 +26,7 @@ class RecordsController extends Controller
         $this->recordRepository = $recordRepository;
         $this->userRepository = $userRepository;
 
-        $this->middleware('auth');
+        $this->middleware(['auth', 'ismobile']);
     }
 
     /**

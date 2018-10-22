@@ -15,7 +15,7 @@ class TimetablesController extends Controller
      */
     public function __construct(TimetableRepository $timetableRepository)
     {
-        $this->middleware(['auth', 'checkrole:super_admin,admin']);
+        $this->middleware(['auth', 'ismobile', 'checkrole:super_admin,admin']);
 
         $this->timetableRepository = $timetableRepository;
     }

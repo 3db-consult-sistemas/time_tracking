@@ -18,7 +18,7 @@ class UsersController extends Controller
      */
     public function __construct(UserRepository $userRepository)
     {
-        $this->middleware(['auth', 'checkrole:super_admin,admin']);
+        $this->middleware(['auth', 'ismobile', 'checkrole:super_admin,admin']);
 
         $this->userRepository = $userRepository;
     }

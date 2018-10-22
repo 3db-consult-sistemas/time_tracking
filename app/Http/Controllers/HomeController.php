@@ -20,7 +20,7 @@ class HomeController extends Controller
     {
         $this->recordRepository = $recordRepository;
 
-        $this->middleware('auth');
+        $this->middleware(['auth', 'ismobile']);
     }
 
     /**
