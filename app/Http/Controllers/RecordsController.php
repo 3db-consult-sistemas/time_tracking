@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use App\UserRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use App\Http\Requests\RecordRequest;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AbsenceRequests;
 use App\Model\Record\RecordRepository;
+use Illuminate\Support\Facades\Validator;
 
 class RecordsController extends Controller
 {

@@ -83,6 +83,32 @@ class RecordRepository
     }
 
     /**
+     * NO SE USA
+     * Determino si un usuario se encuentra durante el tiempo de la comida.
+     *
+     * @param $id
+     * @return void
+     */
+    public function inLunchTime($userId)
+    {
+        $entry = $this->getModel()
+            ->select('check_out', 'comments')
+            ->where('user_id', $userId)
+            ->orderBy('check_out', 'desc')
+            ->first();
+
+        if ($entry['comments'] != 'comida') {
+            return false;
+        }
+
+        if (Carbon::now()->diffInSeconds($entry['check_out']) <= config('options.lunch_time')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Realizo el 'check in' para el usuario logeado.
      *
      * @param $data

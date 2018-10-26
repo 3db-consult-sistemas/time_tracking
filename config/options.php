@@ -31,4 +31,43 @@ return [
 
     'add_seconds_to_aggregate' => 300,
 
+    /*
+    |--------------------------------------------------------------------------
+    | Absence options
+    |--------------------------------------------------------------------------
+    |
+    | Opciones en el desplegable para hacer una ausencia.
+    |
+    */
+
+    'absence_options' => [
+        'descanso' => 'descanso',
+        'medico' => 'consulta médica',
+        'otros' => 'otros',
+    ],
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Lunch Duration
+    |--------------------------------------------------------------------------
+    |
+    | Duración del tiempo de la commida en segundos.
+    |
+    */
+
+    'lunch_time' => 3600,
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Break Duration
+    |--------------------------------------------------------------------------
+    |
+    | Duración del tiempo de descanso en minutos.
+    |
+    */
+
+    'break_duration' => 15,
+
 ];

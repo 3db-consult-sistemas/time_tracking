@@ -45,7 +45,7 @@ trait Helpers
         $symbol = $seconds < 0 ? '-' : '';
         $seconds = abs($seconds);
         $hours = $seconds/3600;
-        return sprintf("%s%.2f", $symbol, $hours);
+        return sprintf("%s%.3f", $symbol, $hours);
     }
 
     /**

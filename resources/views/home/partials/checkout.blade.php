@@ -8,7 +8,7 @@
         </button>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" id="check_out_comment">
         <textarea name="check_out_comment"
                 class="form-control"
                 style="resize:none"
@@ -16,5 +16,4 @@
                 autocomplete="off"
                 placeholder="Comentario...">{{ old('check_out_comment') }}</textarea>
     </div>
-
 </form>
