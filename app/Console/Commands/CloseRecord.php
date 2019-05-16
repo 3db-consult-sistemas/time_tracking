@@ -49,7 +49,7 @@ class CloseRecord extends Command
                 continue;
             }
 
-            if (count($record->ticket) == 1) {
+            if (! is_null($record->ticket)) {
                 continue;
             }
 
@@ -60,5 +60,4 @@ class CloseRecord extends Command
 
         $this->info('Records close successfully!');
     }
-
 }
