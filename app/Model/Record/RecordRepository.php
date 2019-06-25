@@ -192,7 +192,7 @@ class RecordRepository
     public function fetch($data)
     {
 		$method = $data['aggregate'] == 'record' ? "all" : "groupBy{$data['aggregate']}";
-//dd($this->$method($data));
+
 		return DB::select(DB::raw($this->$method($data)));
     }
 
@@ -256,7 +256,7 @@ class RecordRepository
                 records.comments,
                 records.check_in,
                 records.check_out,
-				records.night_shift,
+                records.night_shift,
                 TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs,
                 (SELECT CASE DATE_FORMAT(records.check_in, '%w')
                     WHEN 0 THEN tmp.sunday

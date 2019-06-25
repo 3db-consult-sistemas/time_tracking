@@ -49,18 +49,20 @@ class ReportsController extends Controller
      */
     public function download(ReportRequest $request)
     {
-		$entries = $this->recordRepository->fetch($request->formatData()->all());
+        $filters = $request->formatData()->all();
 
-		if (count($entries) == 0) {
-			return redirect()->back()
-				->withInput()
-				->withErrors(['No se han encontrado registros con el filtro actual.']);
-		}
+		$fileName = Carbon::now()->format('Ymd_Hi') . '_' . studly_case($request['userName'] ?? 'reporte');
 
-		$fileName = Carbon::now()->format('Ymd_Hi') . '_' . $request['aggregate'] . '_' . studly_case($request['userName'] ?? 'reporte');
+        Excel::create($fileName, function($excel) use ($filters)
+        {
+            foreach (['month', 'week', 'day', 'record'] as $type)
+            {
+                if (($type == 'record' || $type == 'day') && is_null($filters['userId'])) { continue; }
 
-		Excel::create($fileName, function($excel) use ($entries) {
-            $this->addSheet('Hoja1', $excel, $this->format($entries));
+                $filters['aggregate'] = $type;
+
+                $this->addSheet($type, $excel, $this->format($this->recordRepository->fetch($filters)));
+            }
 		})->export('xlsx');
     }
 
@@ -75,7 +77,7 @@ class ReportsController extends Controller
 	{
 		if(count($data) > 0) {
 			$excel->sheet($name, function($sheet) use ($data) {
-				$sheet->fromArray($data);
+                $sheet->fromArray($data);
 				$sheet->freezeFirstRow();
 				$sheet->setHeight(1, 20);
 				$sheet->row(1, function($row) {
@@ -108,9 +110,8 @@ class ReportsController extends Controller
 			if (property_exists($item, '_month')) $entry['mes'] = $item->_month;
 			if (property_exists($item, '_week')) $entry['semana'] = $item->_week;
 			if (property_exists($item, 'type')) $entry['tipo'] = $item->type;
-			if (property_exists($item, 'comments')) $entry['comentarios'] = $item->comments;
 
-			if (property_exists($item, 'type')) {
+            if (property_exists($item, 'type')) {
 				$entry['check_In'] = $item->check_in;
 				$entry['check_Out'] = $item->check_out;
 			}
@@ -123,7 +124,10 @@ class ReportsController extends Controller
 			}
 
 			$entry['horas_nocturnas'] = (float) $this->formatSecondsToDecimal($item->night_shift);
-			$entry['horas_diurnas'] = $entry['trabajado'] - $entry['horas_nocturnas'];
+            $entry['horas_diurnas'] = $entry['trabajado'] - $entry['horas_nocturnas'];
+
+            if (property_exists($item, 'comments')) $entry['comentarios'] = $item->comments;
+
 			return $entry;
 		}, $array);
 	}

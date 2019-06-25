@@ -63,6 +63,24 @@ trait Helpers
     }
 
     /**
+     * Devuelvo los ultimos cuatro años.
+     *
+     * @return ip
+     */
+    public static function lastYears()
+	{
+        $response = [];
+        $now = Carbon::now()->year;
+
+        for ($i=0; $i < 4; $i++) {
+            if ($now - $i < 2018) { break; }
+            $response[] = $now - $i;
+        }
+
+        return $response;
+    }
+
+    /**
      * Obtengo la IP del cliente.
      *
      * @return ip

@@ -23,8 +23,7 @@
                                     <label>Nombre</label>
                                     <!--
                                     <input name="userName" type="text" class="form-control" value="{{ old('userName') }}" placeholder="Nombre" autocomplete="off">
--->
-
+                                    -->
                                     <input list="userNames"
                                         name="userName"
                                         value="{{ old('userName') }}"
@@ -42,33 +41,12 @@
 
                             <div class='col-xs-12'>
                                 <div class="form-group">
-                                    <label>Agregado</label>
-                                    <select name="aggregate" class="form-control">
-                                        <option value="day" {{ old('aggregate') == 'day' ? 'selected' : '' }}>Diario</option>
-                                        <option value="week" {{ old('aggregate') == 'week' ? 'selected' : '' }}>Semanal</option>
-                                        <option value="month" {{ old('aggregate') == 'month' ? 'selected' : '' }}>Mensual</option>
-                                        <option value="record" {{ old('aggregate') == 'record' ? 'selected' : '' }}>Sin agregar</option>
+                                    <label>Año</label>
+                                    <select name="year" class="form-control">
+                                        @foreach (Helpers::lastYears() as $year)
+                                            <option value="{{ $year }}">{{ $year }}</option>
+                                        @endforeach
                                     </select>
-                                </div>
-                            </div>
-
-                            <div class='col-xs-12'>
-                                <div class="form-group">
-                                    <label>Desde</label>
-                                    <div class='input-group date' id='dtpFrom'>
-                                        <input name="from" type='text' class="form-control" value="{{ old('from') }}"/>
-                                        <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class='col-xs-12'>
-                                <div class="form-group">
-                                    <label>Hasta</label>
-                                    <div class='input-group date' id='dtpTo'>
-                                        <input name="to" type='text' class="form-control" value="{{ old('to') }}"/>
-                                        <span class="input-group-addon"><i class="fa fa-calendar" aria-hidden="true"></i></span>
-                                    </div>
                                 </div>
                             </div>
 
