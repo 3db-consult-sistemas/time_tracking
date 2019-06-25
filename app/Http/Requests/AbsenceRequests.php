@@ -10,7 +10,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class AbsenceRequests extends FormRequest
 {
-    use Helpers;
+	use Helpers;
+
+	protected $durationMin;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -29,13 +31,21 @@ class AbsenceRequests extends FormRequest
      */
     public function rules()
     {
-        return [
+        $rules = [
             'action' => 'required|in:open,close,cancel',
             'absence_type' => ['nullable', Rule::in(array_keys(config('options.absence_options')))],
             'comments' => 'string|nullable|max:191',
             'from' => 'date_format:"Y-m-d H:i"|nullable',
-            'duration' => 'numeric|min:5|max:540'
-        ];
+		];
+
+		$this->durationMin = config('options.break_duration');
+
+		if ($this['absence_type'] != 'descanso') {
+			$this->durationMin = config('options.absence_duration.min');
+			$rules['duration'] = 'numeric|min:' . $this->durationMin . '|max:' . config('options.absence_duration.max');
+		}
+
+		return $rules;
     }
 
     /**
@@ -49,7 +59,11 @@ class AbsenceRequests extends FormRequest
         $validator->after(function ($validator) {
 
             $id = auth()->id();
-            $recordRepository = New RecordRepository();
+			$recordRepository = New RecordRepository();
+
+			if ($this['absence_type'] == 'descanso') {
+				$this['duration'] = $this->durationMin;
+			}
 
             // compruebo que el registro siga activo para poderse cancelar.
             if ($this->get('action') == 'cancel' && $recordRepository->active($id) == null) {
@@ -61,10 +75,10 @@ class AbsenceRequests extends FormRequest
                 $validator->errors()->add('comments', 'Comentario obligatorio al programar una ausencia del tipo "otros".');
             }
 
-            // compruebo que la fecha programada sea al menos 10 minutos superior a la actual.
+            // compruebo que la fecha programada sea al menos 'options.absence_duration.min' minutos superior a la actual.
             if (($dateTime = $this->toCarbon($this->get('from'))) != null) {
-                if ($dateTime <= Carbon::now()->addMinute(10)) {
-                    $validator->errors()->add('from', 'La fecha y hora programada debe ser al menos 10 minutos superior a la actual.');
+                if ($dateTime <= Carbon::now()->addMinute($this->durationMin)) {
+                    $validator->errors()->add('from', 'La fecha y hora programada debe ser al menos ' . $this->durationMin . ' minutos superior a la actual.');
                 }
                 $this['from'] = $dateTime;
             }

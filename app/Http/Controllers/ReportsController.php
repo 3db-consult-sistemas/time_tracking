@@ -109,24 +109,22 @@ class ReportsController extends Controller
 			if (property_exists($item, '_week')) $entry['semana'] = $item->_week;
 			if (property_exists($item, 'type')) $entry['tipo'] = $item->type;
 			if (property_exists($item, 'comments')) $entry['comentarios'] = $item->comments;
+
 			if (property_exists($item, 'type')) {
 				$entry['check_In'] = $item->check_in;
 				$entry['check_Out'] = $item->check_out;
 			}
-			$entry['trabajado'] = (float) $this->formatSecondsToDecimal($item->secs);
-			$entry['estimado'] = (float) $this->formatSecondsToDecimal($item->hoursToWork);
-			if (property_exists($item, 'average')) $entry['tiempo_medio'] = (float) $this->formatSecondsToDecimal($item->average);
-			return $entry;
 
-			/*
-			unset($item->user_id);
+			$entry['estimado'] = (float) $this->formatSecondsToDecimal($item->hoursToWork);
+			$entry['trabajado'] = (float) $this->formatSecondsToDecimal($item->secs);
+
 			if (property_exists($item, 'average')) {
-				$item->average = $this->formatSeconds($item->average);
+				$entry['tiempo_medio'] = (float) $this->formatSecondsToDecimal($item->average);
 			}
-			$item->secs = $this->formatSeconds($item->secs);
-			$item->hoursToWork = $this->formatSeconds($item->hoursToWork);
-			return get_object_vars($item);
-			*/
+
+			$entry['horas_nocturnas'] = (float) $this->formatSecondsToDecimal($item->night_shift);
+			$entry['horas_diurnas'] = $entry['trabajado'] - $entry['horas_nocturnas'];
+			return $entry;
 		}, $array);
 	}
 }

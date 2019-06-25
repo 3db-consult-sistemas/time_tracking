@@ -8,6 +8,12 @@
     <meta name="author" content="3dB Consult">
 	<link rel="icon" href="{!! asset('images/favicon.ico') !!}">
 
+	<script type="text/javascript">
+        window.__BREAK_TIME = @json(config('options.break_duration'));
+        window.__ABSENCE_MIN = @json(config('options.absence_duration.min'));
+		window.__ABSENCE_MAX = @json(config('options.absence_duration.max'));
+    </script>
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 

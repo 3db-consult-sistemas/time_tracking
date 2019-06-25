@@ -61,10 +61,15 @@
                         </span>
                     </div>
                 </div>
-
                 <div class="form-group">
                     <label>Duranción (minutos):</label>
-                    <input name="duration" id="idDuration" type="number" value="{{ old('duration', 15) }}" class="form-control" min="1" max="540">
+                    <input name="duration"
+						   id="idDuration"
+						   type="number"
+						   class="form-control"
+						   value="{{ old('duration', config('options.absence_duration.min')) }}"
+						   min="{{ config('options.absence_duration.min') }}"
+						   max="{{ config('options.absence_duration.max') }}">
                 </div>
             </div>
         </div>
@@ -108,7 +113,7 @@
 
                 // Al deseleccionar la ausencia programada reinicio los input.
                 $('#absenceTimeOptions').on('hidden.bs.collapse', function () {
-                    $('#idDuration').val('15');
+                    $('#idDuration').val(window.__ABSENCE_MIN);
                     $('#idFrom').val('');
                 })
             });

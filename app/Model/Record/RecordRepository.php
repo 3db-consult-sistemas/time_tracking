@@ -5,6 +5,7 @@ namespace App\Model\Record;
 use Carbon\Carbon;
 use App\Model\Helpers;
 use App\Model\Record\Record;
+use App\Model\Record\NightShift;
 use Illuminate\Support\Facades\DB;
 
 class RecordRepository
@@ -130,12 +131,16 @@ class RecordRepository
      */
     public function close($id, $comments = null)
     {
- 		return $this->getModel()
-			->where('id', $id)
-            ->update([
-                'check_out' => Carbon::now(),
-                'comments' => $comments
-            ]);
+		$entry = $this->getModel()->where('id', $id)->first();
+
+		if (is_null($entry)) { return false; }
+
+		$now = Carbon::now();
+
+		$entry->check_out = $now;
+		$entry->comments = $comments;
+		$entry->night_shift = NightShift::getTimeInSeconds($entry->check_in, $now);
+		return $entry->save();
     }
 
     /**
@@ -156,23 +161,27 @@ class RecordRepository
             ? $data['check_in']->copy()->addMinutes($data['duration'])
             : null;
 
+		$data['night_shift'] = NightShift::getTimeInSeconds($data['check_in'], $data['check_out'] ?? $now);
+
         $entry = $this->getModel()->where('id', $data['id'])->first();
 
         if ($entry->check_in > $data['check_in']) {
             return $entry->delete();
         }
 
-        return DB::transaction(function () use ($now, $data) {
-            DB::table('records')->where('id', $data['id'])->update([
-                'check_out' => $now
-            ]);
+        return DB::transaction(function () use ($entry, $data, $now) {
+			// Cierro el registro actual
+			$entry->check_out = $now;
+			$entry->night_shift = NightShift::getTimeInSeconds($entry->check_in, $now);
+			$entry->save();
 
+			// Creo el registro de ausencia
             unset($data['id']);
             unset($data['duration']);
 
             DB::table('records')->insert($data);
         });
-    }
+	}
 
     /**
      * Fetch data.
@@ -182,9 +191,9 @@ class RecordRepository
      */
     public function fetch($data)
     {
-        $method = $data['aggregate'] == 'record' ? "all" : "groupBy{$data['aggregate']}";
-
-        return DB::select(DB::raw($this->$method($data)));
+		$method = $data['aggregate'] == 'record' ? "all" : "groupBy{$data['aggregate']}";
+//dd($this->$method($data));
+		return DB::select(DB::raw($this->$method($data)));
     }
 
     /**
@@ -196,7 +205,7 @@ class RecordRepository
     {
         $query = $this->groupByDay($data);
 
-        return "SELECT user_name, user_id, _month, SUM(secs) as secs, AVG(secs) as average, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
+        return "SELECT user_name, user_id, _month, SUM(night_shift) as night_shift, SUM(secs) as secs, AVG(secs) as average, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
             GROUP BY user_id, _month
             ORDER BY user_name ASC, _month DESC";
     }
@@ -210,7 +219,7 @@ class RecordRepository
     {
         $query = $this->groupByDay($data);
 
-        return "SELECT user_name, user_id, _week, SUM(secs) as secs, AVG(secs) as average, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
+        return "SELECT user_name, user_id, _week, SUM(night_shift) as night_shift, SUM(secs) as secs, AVG(secs) as average, SUM(hoursToWork) as hoursToWork FROM ({$query}) as tmp
             GROUP BY user_id, _week
             ORDER BY user_name ASC, _week DESC";
     }
@@ -225,7 +234,7 @@ class RecordRepository
         $query = $this->all($data);
         $seconds = config('options.add_seconds_to_aggregate');
 
-        return "SELECT user_name, user_id, _date, _month, _week, SUM(secs)+{$seconds} as secs, hoursToWork FROM ({$query}) as tmp
+        return "SELECT user_name, user_id, _date, _month, _week, SUM(night_shift) as night_shift, SUM(secs)+{$seconds} as secs, hoursToWork FROM ({$query}) as tmp
                 GROUP BY user_id, _date, _week, _month, hoursToWork
                 ORDER BY user_name ASC, _date DESC";
     }
@@ -237,18 +246,17 @@ class RecordRepository
      */
     protected function all($data)
     {
-        // INET_NTOA(records.ip) as ip,
-
         $query = "SELECT
                 users.name as user_name,
                 records.user_id,
                 DATE(records.check_in) as _date,
-                WEEK(records.check_in, 1)  as _week,
-                MONTH(records.check_in)  as _month,
+                WEEK(records.check_in, 1) as _week,
+                MONTH(records.check_in) as _month,
                 records.type,
                 records.comments,
                 records.check_in,
                 records.check_out,
+				records.night_shift,
                 TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs,
                 (SELECT CASE DATE_FORMAT(records.check_in, '%w')
                     WHEN 0 THEN tmp.sunday

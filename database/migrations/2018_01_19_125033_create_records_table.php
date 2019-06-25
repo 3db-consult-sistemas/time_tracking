@@ -18,9 +18,10 @@ class CreateRecordsTable extends Migration
             $table->unsignedInteger('user_id');
             $table->enum('type', ['ordinaria', 'ausencia'])->default('ordinaria');
             $table->datetime('check_in');
-            $table->datetime('check_out')->nullable();
+			$table->datetime('check_out')->nullable();
+			$table->unsignedInteger('night_shift')->nullable();
             $table->biginteger('ip')->unsigned()->nullable();
-            $table->string('comments')->nullable();
+			$table->string('comments')->nullable();
 
             $table->foreign('user_id')
                 ->references('id')

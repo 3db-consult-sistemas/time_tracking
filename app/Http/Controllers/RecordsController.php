@@ -45,7 +45,7 @@ class RecordsController extends Controller
         }
         else {
             $entries = $this->recordRepository->fetch($data);
-        }
+		}
 
         return view('summary.index', compact('data', 'users', 'entries'));
 

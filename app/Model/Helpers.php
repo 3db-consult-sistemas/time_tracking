@@ -18,6 +18,18 @@ trait Helpers
         if ($date == null) return null;
 
         return Carbon::createFromFormat($format, $date);
+	}
+
+	/**
+     * Obtengo el numero de segundos de la hora dada en uno de los siguientes formatos: "H:m:s", "H:m", "H".
+     *
+     * @param  $time
+     * @return string
+     */
+	public static function timeToSeconds(string $time)
+	{
+		sscanf($time, "%d:%d:%d", $hours, $minutes, $seconds);
+		return $hours * 3600 + $minutes * 60 + $seconds;
     }
 
 	/**
@@ -26,7 +38,8 @@ trait Helpers
      * @param  $seconds
      * @return string
      */
-    public static function formatSeconds($seconds) {
+	public static function formatSeconds($seconds)
+	{
         $symbol = $seconds < 0 ? '-' : '';
         $seconds = abs($seconds);
         $hours = floor($seconds/3600);
@@ -41,7 +54,8 @@ trait Helpers
      * @param  $seconds
      * @return string
      */
-    public static function formatSecondsToDecimal($seconds) {
+	public static function formatSecondsToDecimal($seconds)
+	{
         $symbol = $seconds < 0 ? '-' : '';
         $seconds = abs($seconds);
         $hours = $seconds/3600;
@@ -53,7 +67,8 @@ trait Helpers
      *
      * @return ip
      */
-    public static function getIp() {
+	public static function getIp()
+	{
         if (! empty($_SERVER['HTTP_CLIENT_IP'])) {
             return $_SERVER['HTTP_CLIENT_IP'];
         }

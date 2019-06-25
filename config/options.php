@@ -7,7 +7,7 @@ return [
     | Close After
     |--------------------------------------------------------------------------
     |
-    | Numero de minutos entre la hora de check_in y la de cirre para determinar
+    | Numero de minutos entre la hora de check_in y la de cierre para determinar
     | si a de cerrarse la entrada y crear un ticket de revision.
     |
     | Para 300 minutos, las entradas abiertas con una diferencia de 5 horas
@@ -70,4 +70,33 @@ return [
 
     'break_duration' => 15,
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Absence Duration
+    |--------------------------------------------------------------------------
+    |
+    | Duración mínima de la ausencia.
+    |
+    */
+
+	'absence_duration' => [
+		'min' => 10,
+		'max' => 540
+	],
+
+
+	/*
+    |--------------------------------------------------------------------------
+    | Night Shift
+    |--------------------------------------------------------------------------
+    |
+    | Inicio y final del turno nocturno. Usado en los reportes.
+    |
+    */
+
+    'night_shift' => [
+		'start' => '22:00',
+		'end' => '6:00'
+	],
 ];

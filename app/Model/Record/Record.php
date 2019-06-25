@@ -24,7 +24,7 @@ class Record extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'check_in', 'check_out', 'type', 'comments', 'ip'
+        'user_id', 'check_in', 'check_out', 'night_shift', 'type', 'comments', 'ip'
     ];
 
     /**
