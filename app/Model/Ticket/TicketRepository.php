@@ -4,6 +4,7 @@ namespace App\Model\Ticket;
 
 use App\Model\Helpers;
 use App\Model\Ticket\Ticket;
+use App\Model\Record\NightShift;
 
 class TicketRepository
 {
@@ -56,7 +57,8 @@ class TicketRepository
     public function closeTicket(Ticket $ticket, $data)
     {
         $record = $ticket->record;
-        $record->check_out = $this->toCarbon($data->get('check_out'));
+		$record->check_out = $this->toCarbon($data->get('check_out'));
+		$record->night_shift = NightShift::getTimeInSeconds($record->check_in, $record->check_out);
         $record->save();
 
         $ticket->comments = $data->get('comments');
