@@ -16,6 +16,7 @@ class CreateRecordsTable extends Migration
         Schema::create('records', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
+            $table->unsignedInteger('project_id')->nullable();
             $table->enum('type', ['ordinaria', 'ausencia'])->default('ordinaria');
             $table->datetime('check_in');
 			$table->datetime('check_out')->nullable();
@@ -26,6 +27,11 @@ class CreateRecordsTable extends Migration
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
+                ->onDelete('cascade');
+
+            $table->foreign('project_id')
+                ->references('id')
+                ->on('projects')
                 ->onDelete('cascade');
         });
     }

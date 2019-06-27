@@ -53,6 +53,14 @@ class User extends Authenticatable
     }
 
     /**
+     * The projects that belong to the user.
+     */
+    public function projects()
+    {
+        return $this->belongsToMany(\App\Model\Project\Project::class);
+    }
+
+    /**
      * Get the timetable records associated with the user.
      */
     public function timetables()
@@ -71,12 +79,4 @@ class User extends Authenticatable
                 'sunday'
             ]);
     }
-
-    /*
-    public function active()
-    {
-        $recordRepository = new \App\Model\Record\RecordRepository();
-        return $recordRepository->status($this->id)['code'];
-    }
-    */
 }

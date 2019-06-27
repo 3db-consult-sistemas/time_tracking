@@ -32,6 +32,9 @@ class HomeController extends Controller
     {
         $userId = auth()->id();
 
+        //$user = \App\User::with('projects')->find(1);
+        //dd($user);
+
         $entries = $this->recordRepository->fetch([
             'aggregate' => 'day',
             'userId' => $userId,
