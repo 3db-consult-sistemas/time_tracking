@@ -44,10 +44,6 @@ Route::patch('/users/{user}/enable', 'UsersController@enable')->name('users.enab
 Route::post('/timetable', 'TimetablesController@store');
 Route::delete('/timetable/{id}', 'TimetablesController@destroy');
 
-Route::get('/mobile', function() {
-    return view('mobile');
-});
+Route::get('/mobile', function() { return view('errors.mobile'); });
 
-Route::get('/getIp', function() {
-    return \App\Model\Helpers::getIp();
-});
+// Route::get('/getIp', function() { return \App\Model\Helpers::getIp(); });

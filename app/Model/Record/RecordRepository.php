@@ -305,7 +305,7 @@ class RecordRepository
                 DB::raw("INET_NTOA(records.ip) as ip")
             ])
             ->orderBy('records.check_in', 'desc')
-            ->paginate(15)
+            ->paginate(config('options.paginate_number_items'))
             ->appends($data);
     }
 }

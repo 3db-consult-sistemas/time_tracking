@@ -36,7 +36,7 @@ class TicketRepository
                 ->with('record', 'user')
                 ->orderBy('status')
                 ->orderBy('tickets.created_at', 'desc')
-                ->paginate(15)
+                ->paginate(config('options.paginate_number_items'))
                 ->appends($data);
         }
 
@@ -44,7 +44,7 @@ class TicketRepository
             ->with('record', 'user')
             ->orderBy('status')
             ->latest()
-            ->paginate(15);
+            ->paginate(config('options.paginate_number_items'));
     }
 
     /**

@@ -24,7 +24,9 @@
                     <td>{{ $ticket->record->type }}</td>
                     <td>{{ $ticket->record->check_in }}</td>
                     <td>{{ $ticket->closedBy->name ?? '-' }}</td>
-                    <td><a class="btn btn-default btn-block btn-sm" href="{{ route('tickets.edit', $ticket) }}">Detalles</a></td>
+					<td><a class="btn btn-default btn-block btn-sm"
+						   style="padding: 2px 10px;"
+						   href="{{ route('tickets.edit', $ticket) }}">Detalles</a></td>
                 </tr>
             @endforeach
         </tbody>

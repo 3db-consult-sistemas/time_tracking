@@ -38,12 +38,13 @@
         }
 
         .title {
-            font-size: 1.5em;
+            font-size: 3em;
             margin-bottom: 40px;
         }
 
         .message {
-            margin-bottom: 40px;
+			font-size: 1.3em;
+            margin-bottom: 70px;
             margin-left: 2em;
             margin-right: 2em;
         }
@@ -53,8 +54,7 @@
 <body>
     <div class="container">
         <div class="content">
-            <div class="title"><strong>¡Acceso prohibido!</strong></div>
-            <div class="message">Debe de acceder desde un terminal de trabajo válido.</div>
+			@yield('content')
         </div>
     </div>
 </body>

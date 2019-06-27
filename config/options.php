@@ -99,4 +99,17 @@ return [
 		'start' => '22:00',
 		'end' => '6:00'
 	],
+
+
+	/*
+    |--------------------------------------------------------------------------
+    | Number Paginate
+    |--------------------------------------------------------------------------
+    |
+    | Numero de elementos a visualizar cuando se realicen filtros con paginación.
+    |
+    */
+
+    'paginate_number_items' => 17,
+
 ];

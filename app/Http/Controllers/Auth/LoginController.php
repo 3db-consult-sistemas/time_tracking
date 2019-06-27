@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -45,5 +46,15 @@ class LoginController extends Controller
     public function username()
     {
         return 'username';
-    }
+	}
+
+
+	public function authenticated(Request $request, $user)
+	{
+		if ($user->enabled === 0) {
+			auth()->logout();
+
+			abort(403, 'No puede acceder ya que su usuario esta deshabilitado, hable con su responsable de proyecto u administrador.');
+		}
+	}
 }

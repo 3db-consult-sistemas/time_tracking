@@ -16,11 +16,11 @@ class IsMobile
     public function handle($request, Closure $next)
     {
         if (! isset($_SERVER['HTTP_USER_AGENT'])) {
-            return redirect('/mobile');
+            return redirect('/errors.mobile');
         }
 
         if (stristr($_SERVER['HTTP_USER_AGENT'], 'mobi') !== false) {
-            return redirect('/mobile');
+            return redirect('/errors.mobile');
         }
 
         return $next($request);

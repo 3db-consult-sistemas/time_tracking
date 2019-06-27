@@ -41,7 +41,7 @@ class ReportsController extends Controller
         {
             foreach (['month', 'week', 'day', 'record'] as $type)
             {
-                if (($type == 'record' || $type == 'day') && is_null($filters['userId'])) { continue; }
+                if ($type == 'record' && is_null($filters['userId'])) { continue; }
 
                 $filters['aggregate'] = $type;
 
