@@ -40,6 +40,10 @@
         @yield('content')
     </div>
 
+	<footer class="hide-with-mobile">
+		<p class="text-muted">Versión v{{ config('app.version') }}</p>
+	</footer>
+
     @stack('bottom')
 </body>
 

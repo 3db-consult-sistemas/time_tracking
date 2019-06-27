@@ -24,7 +24,6 @@ class AppServiceProvider extends ServiceProvider
         \View::composer([
             'home.index',
             'summary.index',
-            'reports.index',
             'tickets.index',
             'tickets.edit',
             'users.index',

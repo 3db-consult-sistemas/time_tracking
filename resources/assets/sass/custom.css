@@ -1,4 +1,22 @@
 /*
+ * Mantener el footer abajo del todo
+ */
+html { position: relative; min-height: 100%; }
+
+body { margin-bottom: 50px; }
+
+footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+	padding-top:13px;
+	text-align: center;
+	background-color: #fff;
+	border-top: 1px solid #d3e0e9;
+}
+
+/*
  * Sobreescribo los valores badge (bootstrap)
  */
 .badge {
@@ -10,23 +28,15 @@
 /*
  * Tamaño para botones
  */
-.custom-btn-width {
-    width: 100px;
-}
+.custom-btn-width { width: 100px; }
 
-@media (max-width:768px){
-    .custom-btn-mobile {
-        height: 250px;
-    }
+@media (max-width:768px) {
+    .custom-btn-mobile { height: 250px; }
 }
 
 /*
  * Separacion entre celdas de la tabla para añadir horarios
  */
-.custom-table-timetable td {
-    padding: 2px !important;
-}
+.custom-table-timetable td { padding: 2px !important; }
 
-.table td {
-    vertical-align: middle !important;
-}
+.table td { vertical-align: middle !important; }

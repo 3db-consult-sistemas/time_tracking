@@ -1,5 +1,5 @@
 <div class="table-responsive">
-    <table class="table table-striped">
+    <table class="table table-condensed table-striped">
         <thead>
             <tr>
                 <th>Trabajador</th>

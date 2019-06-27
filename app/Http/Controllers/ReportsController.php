@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Model\Helpers;
-use App\UserRepository;
-use App\Http\Requests\ReportRequest;
-use App\Model\Record\RecordRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Model\Record\RecordRepository;
 
 class ReportsController extends Controller
 {
@@ -21,35 +21,19 @@ class ReportsController extends Controller
      *
      * @return void
      */
-    public function __construct(
-		RecordRepository $recordRepository,
-		UserRepository $userRepository)
+    public function __construct(RecordRepository $recordRepository)
     {
 		$this->recordRepository = $recordRepository;
-		$this->userRepository = $userRepository;
 
-        $this->middleware(['auth', 'ismobile', 'checkrole:super_admin,admin']);
+        $this->middleware(['auth', 'ismobile']);
     }
 
     /**
-     * Visualizo la vista de reportes.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-		$users = $this->userRepository->fetch();
-
-        return view('reports.index', compact('users'));
-	}
-
-    /**
      * Aplico el filtro seleccionado y descargo la informacion en formato excel.
-     *
      */
-    public function download(ReportRequest $request)
+    public function download(Request $request, int $year)
     {
-        $filters = $request->formatData()->all();
+		$filters = $this->getData($year, $request->query('userName', null));
 
 		$fileName = Carbon::now()->format('Ymd_Hi') . '_' . studly_case($request['userName'] ?? 'reporte');
 
@@ -64,7 +48,31 @@ class ReportsController extends Controller
                 $this->addSheet($type, $excel, $this->format($this->recordRepository->fetch($filters)));
             }
 		})->export('xlsx');
-    }
+	}
+
+
+	/**
+	 * Creo la estructura de datos necesaria de filtrado de registros para crear los reportes.
+	 */
+	private function getData(int $year, string $userName = null)
+	{
+		$response = [
+			'from' => "{$year}-01-01",
+			'to' => "{$year}-12-31",
+			'userId' => null
+		];
+
+		if (! (Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))) {
+			$response['userId'] = auth()->user()->id;
+			return $response;
+		}
+
+		$response['userId'] = ($user = User::where('username', $userName)->first()) != null
+			? $user->id
+			: null;
+
+		return $response;
+	}
 
     /**
 	 * Creo una pestaña nueva en el excel.

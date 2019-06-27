@@ -1,13 +1,14 @@
 <div class="table-responsive">
-    <table class="table">
+    <table class="table table-condensed">
 
-        <?php $total = 0; $totalEstimate = 0; $totalDiff = 0; ?>
+        <?php $total = 0; $totalNightShift = 0; $totalEstimate = 0; $totalDiff = 0; ?>
 
         <thead>
             <tr>
                 <th>Trabajador</th>
                 <th>Semana</th>
-                <th>Trabajado</th>
+				<th>Trabajado</th>
+				<th>Nocturnas</th>
                 <th>Teórico</th>
                 <th>Diferencia</th>
             </tr>
@@ -17,7 +18,8 @@
             @foreach ($entries as $entry)
                 <tr>
                     <?php
-                    $total += $entry->secs;
+					$total += $entry->secs;
+					$totalNightShift += $entry->night_shift;
                     $totalEstimate += $entry->hoursToWork;
                     $diff = $entry->secs - $entry->hoursToWork;
                     $totalDiff += $diff;
@@ -25,7 +27,8 @@
 
                     <td>{{ $entry->user_name }}</td>
                     <td>{{ $entry->_week }}</td>
-                    <td>{{ Helpers::formatSeconds($entry->secs) }}</td>
+					<td>{{ Helpers::formatSeconds($entry->secs) }}</td>
+					<td>{{ $entry->night_shift > 0 ? Helpers::formatSeconds($entry->night_shift) : '-' }}</td>
                     <td>{{ Helpers::formatSeconds($entry->hoursToWork) }}</td>
                     <td class="{{ $diff < 0 ? 'danger' : 'success' }}">{{ Helpers::formatSeconds($diff) }}</td>
                 </tr>
@@ -36,7 +39,8 @@
             <tr class="{{ $totalDiff < 0 ? 'danger' : 'success' }}">
                 <td></td>
                 <td></td>
-                <td>{{ Helpers::formatSeconds($total)  }}</td>
+				<td>{{ Helpers::formatSeconds($total)  }}</td>
+				<td>{{ Helpers::formatSeconds($totalNightShift)  }}</td>
                 <td>{{ Helpers::formatSeconds($totalEstimate)  }}</td>
                 <td>{{ Helpers::formatSeconds($totalDiff) }}</td>
             </tr>

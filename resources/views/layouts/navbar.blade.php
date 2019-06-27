@@ -12,7 +12,7 @@
 
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ url('/') }}">
-                3dB Consult
+				3dB Consult
             </a>
         </div>
 
@@ -22,7 +22,6 @@
                 @auth
                     <li><a href="{{ url('/summary') }}">Resumen</a></li>
                     @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
-                        <li><a href="{{ url('/reports') }}">Reportes</a></li>
 
                         @if (isset($openTickets) && $openTickets > 0)
                             <li><a href="{{ url('/tickets') }}">Tickets <span class="badge">{{ $openTickets }}</span></a></li>

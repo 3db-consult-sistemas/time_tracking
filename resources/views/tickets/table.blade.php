@@ -1,7 +1,7 @@
 @if (count($tickets) > 0)
 
 <div class="table-responsive">
-    <table class="table">
+    <table class="table table-condensed">
         <thead>
             <tr>
                 <th>ID</th>
