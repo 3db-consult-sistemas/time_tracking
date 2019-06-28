@@ -56,13 +56,19 @@ class RecordsController extends Controller
      *
      * @return redirect
      */
-    public function checkIn()
+    public function checkIn(Request $request)
     {
+		$validator = Validator::make($request->all(), ['project' => 'required']);
+
+		if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+		}
+
         if ($this->recordRepository->active(auth()->id()) != null) {
             return redirect()->back();
         }
 
-        if(! $this->recordRepository->create(['user_id' => auth()->id()])) {
+        if(! $this->recordRepository->create(['user_id' => auth()->id(), 'project_id' => $request->input('project')])) {
             return redirect()->back()
                 ->withErrors(['No se ha podido realizar el Check-In.']);
 		}

@@ -17,22 +17,32 @@ class ProjectsTableSeeder extends Seeder
         $faker = Faker::create();
 
         // Añado los proyectos
-        $projects = [
-            [ 'name' => 'RANEVO - Diseño', 'enabled' => false ],
-            [ 'name' => 'RANEVO - IT' ],
-            [ 'name' => 'RANEVO - OPT' ],
-            [ 'name' => 'ANE - Diseño' ],
-            [ 'name' => 'ANE - IT', 'enabled' => false ],
-            [ 'name' => 'Formación - En puesto' ],
-            [ 'name' => 'Formación - Curso' ],
-            [ 'name' => 'Formación - Desarrollos' ]
+        $data = [
+			[ 'name' => 'Vacaciones', 'status' => 2 ],
+			[ 'name' => 'Baja', 'status' => 2 ],
+			[ 'name' => 'Formación - En puesto', 'status' => 1 ],
+            [ 'name' => 'Formación - Curso', 'status' => 1 ],
+			[ 'name' => 'Formación - Desarrollos', 'status' => 1 ],
+			[ 'name' => 'Comité', 'status' => 4 ],
+			[ 'name' => 'Igualdad', 'status' => 4 ],
+			[ 'name' => 'Gerencia', 'status' => 4 ],
+			[ 'name' => 'Sistemas', 'status' => 4 ],
+
+            [ 'name' => 'RANEVO - Diseño', 'status' => 3 ],
+            [ 'name' => 'RANEVO - IT', 'status' => 4 ],
+            [ 'name' => 'RANEVO - OPT', 'status' => 4 ],
+            [ 'name' => 'ANE - Diseño', 'status' => 4 ],
+            [ 'name' => 'ANE - IT', 'status' => 3 ]
         ];
 
-        for ($i=0; $i < count($projects); $i++) {
-            $projects[$i]['id'] = DB::table('projects')->insertGetId($projects[$i]);
+		$projects = [];
+        for ($i=0; $i < count($data); $i++) {
+			$data[$i]['id'] = DB::table('projects')->insertGetId($data[$i]);
+
+			if ($data[$i]['status'] > 2) { $projects[] = $data[$i]; }
         }
 
-        // Creo las relaciones entre usuarios y proyectos as los que puede reportar
+        // Creo las relaciones entre usuarios y proyectos a los que puede reportar
         $users = User::all();
 
         foreach ($users as $user) {

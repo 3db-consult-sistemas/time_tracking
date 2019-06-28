@@ -55,9 +55,24 @@ class User extends Authenticatable
     /**
      * The projects that belong to the user.
      */
-    public function projects()
+    public function projects(bool $withDisabled = false)
     {
-        return $this->belongsToMany(\App\Model\Project\Project::class);
+		return $this->belongsToMany(\App\Model\Project\Project::class);
+	}
+
+	/**
+	 * Proyectos a los que el usuario puede reportar.
+	 */
+    public function availableProjects()
+    {
+		$userId = $this->id;
+
+		$query = "SELECT id, status, name FROM project_user AS pu
+				JOIN projects AS p ON p.id = pu.project_id WHERE pu.user_id = {$userId}
+				UNION (SELECT id, status, name FROM projects WHERE status=1)
+				ORDER BY status, name";
+
+		return DB::select(DB::raw($query));
     }
 
     /**

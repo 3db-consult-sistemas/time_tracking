@@ -28,7 +28,9 @@
                         <form method="POST" action="{{ url('timetable/' . $timetable->id) }}">
                             {{ method_field('DELETE') }}
                             {{ csrf_field() }}
-                            <button type="submit" class="btn btn-danger btn-sm btn-block btn-delete">Delete</button>
+							<button type="submit"
+									class="btn btn-danger btn-sm btn-block btn-delete"
+									style="padding: 2px 10px;">Delete</button>
                         </form>
                     </td>
                 </tr>

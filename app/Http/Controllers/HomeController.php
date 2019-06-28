@@ -32,10 +32,7 @@ class HomeController extends Controller
     {
         $userId = auth()->id();
 
-        //$user = \App\User::with('projects')->find(1);
-        //dd($user);
-
-        $entries = $this->recordRepository->fetch([
+		$entries = $this->recordRepository->fetch([
             'aggregate' => 'day',
             'userId' => $userId,
             'from' => Carbon::now()->startOfWeek()->format('Y-m-d'),
@@ -44,8 +41,10 @@ class HomeController extends Controller
 
         $status = $this->recordRepository->status($userId);
 
-        $lastRecord = $this->recordRepository->lastCheckIn($userId);
+		$lastRecord = $this->recordRepository->lastRecord($userId);
 
-        return view('home.index', compact('entries', 'status', 'lastRecord'));
+		$projects = auth()->user()->availableProjects();
+
+        return view('home.index', compact('entries', 'status', 'projects', 'lastRecord'));
     }
 }

@@ -51,7 +51,9 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-        return view('users.edit', compact('user'));
+		$projects = \App\Model\Project\Project::where('status', 4)->orderBy('name')->get();
+
+        return view('users.edit', compact('user', 'projects'));
     }
 
     /**
@@ -78,7 +80,7 @@ class UsersController extends Controller
         $user->role = $request['role'];
         $user->save();
 
-        return redirect('users');
+        return redirect()->back();
     }
 
     /**
@@ -97,6 +99,24 @@ class UsersController extends Controller
         $user->enabled = ! $user->enabled;
         $user->save();
 
-        return redirect('users');
+        return redirect()->back();
+	}
+
+	/**
+	 * Actualizo los proyectos asignados al usuario.
+	 */
+	public function projects(Request $request, User $user)
+    {
+		$validator = Validator::make($request->all(), [
+            'projects' => 'required|array',
+		]);
+
+		if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+		}
+
+		$user->projects()->sync($request->get('projects'));
+
+		return redirect()->back();
     }
 }

@@ -18,10 +18,6 @@
                     @if ($status['code'] == 'close')
                         @include('home.partials.checkin')
 
-                        @if (isset($lastRecord))
-                            <strong>Último Check Out: </strong> {{ $lastRecord->check_out->format('Y-m-d H:i:s') }}
-                        @endif
-
                     @elseif  ($status['code'] == 'open')
                         <div class="row">
                             <div class="col-sm-6">

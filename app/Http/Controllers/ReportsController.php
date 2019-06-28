@@ -114,6 +114,7 @@ class ReportsController extends Controller
 		return array_map( function($item) {
 			$entry = [];
 			$entry['nombre'] = $item->user_name;
+			if (property_exists($item, 'project')) $entry['project'] = $item->project;
 			if (property_exists($item, '_date')) $entry['fecha'] = $item->_date;
 			if (property_exists($item, '_month')) $entry['mes'] = $item->_month;
 			if (property_exists($item, '_week')) $entry['semana'] = $item->_week;

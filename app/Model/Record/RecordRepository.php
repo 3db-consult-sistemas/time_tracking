@@ -23,14 +23,15 @@ class RecordRepository
     }
 
     /**
-     * Obtengo el ultimo check in realizado.
+     * Obtengo el ultimo registro del usuario.
      *
      * @param $userId
      * @return void
      */
-    public function lastCheckIn($userId)
+    public function lastRecord($userId)
     {
-        return $this->getModel()
+		return $this->getModel()
+			->join('projects', 'project_id', '=', 'projects.id')
             ->where('user_id', $userId)
             ->whereNotNull('check_out')
             ->orderBy('check_out', 'desc')
@@ -177,7 +178,9 @@ class RecordRepository
 
 			// Creo el registro de ausencia
             unset($data['id']);
-            unset($data['duration']);
+			unset($data['duration']);
+
+			$data['project_id'] = $entry->project_id;
 
             DB::table('records')->insert($data);
         });
@@ -249,10 +252,11 @@ class RecordRepository
         $query = "SELECT
                 users.name as user_name,
                 records.user_id,
+				projects.name as project,
                 DATE(records.check_in) as _date,
                 WEEK(records.check_in, 1) as _week,
                 MONTH(records.check_in) as _month,
-                records.type,
+				records.type,
                 records.comments,
                 records.check_in,
                 records.check_out,
@@ -274,6 +278,7 @@ class RecordRepository
                     ORDER BY timetables.from_date DESC
                     LIMIT 1)
                 LEFT JOIN users ON users.id = records.user_id
+				LEFT JOIN projects ON projects.id = records.project_id
                 WHERE DATE(records.check_in) >= '{$data['from']}' AND DATE(records.check_in) <= '{$data['to']}'";
 
         if (is_numeric($data['userId'])) {
@@ -291,8 +296,8 @@ class RecordRepository
     public function fetchPaginate($data)
     {
         return $this->getModel()
-            ->join('users', 'users.id', '=', 'records.user_id')
-            //->whereRaw("DATE(records.check_in) >= '{$data['from']}'")
+			->join('users', 'users.id', '=', 'records.user_id')
+			->leftJoin('projects', 'projects.id', '=', 'records.project_id')
             ->where('records.user_id', $data['userId'])
             ->select([
                 'users.name',
@@ -301,8 +306,9 @@ class RecordRepository
                 DB::raw("TIME(records.check_in) as time_in"),
                 DB::raw("TIME(records.check_out) as time_out"),
                 DB::raw("TIMESTAMPDIFF(SECOND, records.check_in, IFNULL(records.check_out, now())) as secs"),
-                'records.comments',
-                DB::raw("INET_NTOA(records.ip) as ip")
+				'records.comments',
+				'projects.name as project',
+                //DB::raw("INET_NTOA(records.ip) as ip")
             ])
             ->orderBy('records.check_in', 'desc')
             ->paginate(config('options.paginate_number_items'))

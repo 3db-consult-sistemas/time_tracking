@@ -23,7 +23,7 @@ class Project extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'enabled'];
+    protected $fillable = ['name', 'status'];
 
     /**
      * The users that belong to the project.

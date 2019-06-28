@@ -4,8 +4,8 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-xs-12">
 
+		<div class="col-xs-12 col-sm-8 col-md-9">
             @include ('layouts.errors')
 
             <div class="panel panel-default">
@@ -36,8 +36,17 @@
                     </div>
                 </div>
             @endcan
+		</div>
 
-        </div>
+		<div class="col-xs-12 col-sm-4 col-md-3">
+			<div class="panel panel-default">
+				<div class="panel-heading"><h3 class="panel-title">Asignar proyectos</h3></div>
+				<div class="panel-body">
+					@include ('users.updateprojects')
+				</div>
+			</div>
+		</div>
+
     </div>
 </div>
 
