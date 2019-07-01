@@ -8,6 +8,7 @@
 	</div>
 
 	<select name="project" class="form-control input-sm">
+		<option value="-1">NA (temporal)</option>
 		@foreach($projects as $project)
 			<option value="{{ $project->id }}" {{ $project->id == (isset($lastRecord) ? $lastRecord->project_id : -1) ? 'selected' : '' }}>{{ $project->name }}</option>
 		@endforeach

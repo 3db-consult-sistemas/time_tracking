@@ -31,12 +31,11 @@ class RecordRepository
     public function lastRecord($userId)
     {
 		return $this->getModel()
-			->join('projects', 'project_id', '=', 'projects.id')
-            ->where('user_id', $userId)
-            ->whereNotNull('check_out')
-            ->orderBy('check_out', 'desc')
-            ->first();
-    }
+			->leftJoin('projects', 'records.project_id', '=', 'projects.id')
+			->where('user_id', $userId)
+			->orderBy('records.id', 'desc')
+			->first();
+	}
 
     /**
      * Obtengo el estado actual del usuario.
@@ -118,6 +117,8 @@ class RecordRepository
      */
     public function create($data)
     {
+		if ($data['project_id'] == '-1') $data['project_id'] = null;
+
         $data['check_in'] = Carbon::now();
         $data['ip'] = ip2long($this->getIp());
 

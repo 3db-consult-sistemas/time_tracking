@@ -40,19 +40,17 @@
 </form>
 
 <script>
+/**
+ * Modifico la URL cuando hay escrito un nombre de usuario.
+ */
+function formatUrl(obj) {
+	let url = obj.getAttribute("href");
+	let name = document.getElementById("userName").value;
 
-	/**
-	 * Modifico la URL cuando hay escrito un nombre de usuario.
-	 */
-	function formatUrl(obj) {
-		let url = obj.getAttribute("href");
-		let name = document.getElementById("userName").value;
+	if (url.indexOf('?userName=') !== -1) { url = url.split('?userName=')[0]; }
 
-		if (url.indexOf('?userName=') !== -1) { url = url.split('?userName=')[0]; }
-
-		obj.setAttribute("href", name != ''
-			? `${url}?userName=${document.getElementById("userName").value}`
-			: url);
-	}
-
+	obj.setAttribute("href", name != ''
+		? `${url}?userName=${document.getElementById("userName").value}`
+		: url);
+}
 </script>

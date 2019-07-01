@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use App\UserRepository;
 use Illuminate\Http\Request;
+use App\Model\Project\Project;
 use Illuminate\Support\Facades\Validator;
 
 class UsersController extends Controller
@@ -51,7 +52,7 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-		$projects = \App\Model\Project\Project::where('status', 4)->orderBy('name')->get();
+		$projects = Project::where('status', 4)->orderBy('name')->get();
 
         return view('users.edit', compact('user', 'projects'));
     }

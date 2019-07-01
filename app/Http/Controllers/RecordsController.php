@@ -73,7 +73,7 @@ class RecordsController extends Controller
                 ->withErrors(['No se ha podido realizar el Check-In.']);
 		}
 
-        return redirect()->back();
+		return redirect()->route('home');
     }
 
     /**
@@ -93,9 +93,36 @@ class RecordsController extends Controller
             return redirect()->back()
                 ->withErrors(['No se ha podido realizar el Check-Out.']);
 		}
+		return redirect()->route('home');
+	}
 
-        return redirect()->back();
-    }
+
+
+    public function changeProject(Request $request, $entryId)
+    {
+        $validator = Validator::make($request->all(), [
+			'check_out_comment' => 'string|nullable|max:191',
+			'project' => 'required'
+		]);
+
+		if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+        }
+
+        if(! $this->recordRepository->close($entryId, $request->input('check_out_comment'))) {
+            return redirect()->back()
+                ->withErrors(['No se ha podido completar el cambio de proyecto.']);
+		}
+
+		if(! $this->recordRepository->create(['user_id' => auth()->id(), 'project_id' => $request->input('project')])) {
+            return redirect()->back()
+                ->withErrors(['No se ha podido completar el cambio de proyecto.']);
+		}
+
+		return redirect()->route('home');
+	}
+
+
 
     /**
      * Create or finish absence time entry.
@@ -109,6 +136,6 @@ class RecordsController extends Controller
 
         $this->recordRepository->absence($data);
 
-        return redirect()->back();
+        return redirect()->route('home');
     }
 }

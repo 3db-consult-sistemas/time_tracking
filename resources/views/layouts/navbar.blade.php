@@ -31,7 +31,6 @@
 
                         <li><a href="{{ url('/users') }}">Usuarios</a></li>
                     @endif
-                    <li><a href="{{ url('/help') }}">Ayuda</a></li>
                 @endauth
             </ul>
 
