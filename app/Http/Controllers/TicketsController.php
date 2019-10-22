@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\UserRepository;
 use App\Model\Ticket\Ticket;
 use Illuminate\Http\Request;
+use App\Model\Record\RecordRepository;
 use App\Model\Ticket\TicketRepository;
 use Illuminate\Support\Facades\Validator;
 
 class TicketsController extends Controller
 {
-    protected $ticketRepository, $recordRepository;
+    protected $ticketRepository, $userRepository;
 
     /**
      * Create a new controller instance.
@@ -50,7 +51,9 @@ class TicketsController extends Controller
      */
     public function edit(Ticket $ticket)
     {
-        return view('tickets.edit', compact('ticket'));
+		$projects = $ticket->user->availableProjects();
+
+        return view('tickets.edit', compact('ticket', 'projects'));
     }
 
     /**
@@ -61,16 +64,66 @@ class TicketsController extends Controller
     public function update(Request $request, Ticket $ticket)
     {
         $validator = Validator::make($request->all(), [
-            'comments' => 'required|string|max:191',
-            'check_out' => 'date_format:"Y-m-d H:i"|after:' . $ticket->record->check_in->format('Y-m-d H:i'),
+			'comments' => 'required|string|max:191',
+			'check_in' => 'date_format_multi:"Y-m-d H:i:s","Y-m-d H:i"',
+            'check_out' => 'date_format_multi:"Y-m-d H:i","Y-m-d H:i:s"|after_or_equal:check_in',
 		]);
 
 		if ($validator->fails()) {
             return redirect()->back()->withInput()->withErrors($validator);
         }
 
+        if (! (new RecordRepository)->timeRangeIsOk(
+                $ticket->user_id,
+                $request->get('check_in'),
+                $request->get('check_out'))) {
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['ticket' => 'Ya existe un registro con el periodo de rango indicado.']);
+        }
+
         $this->ticketRepository->closeTicket($ticket, $request);
 
         return redirect('tickets');
-    }
+	}
+
+	/**
+	 * Muestro el formulario para crear tickets.
+	 */
+	public function create(int $entryId)
+	{
+		$record = (new RecordRepository)->fetchById($entryId);
+
+		return view('tickets.create', compact('record'));
+	}
+
+	/**
+	 * Guardo el ticket.
+	 */
+	public function store(Request $request)
+	{
+		$validator = Validator::make($request->all(), [
+            'comments' => 'required|string|max:191',
+			'user_id' => 'required|exists:users,id',
+			'record_id' => 'required|exists:records,id',
+		]);
+
+		if ($validator->fails()) {
+            return redirect()->back()->withInput()->withErrors($validator);
+		}
+
+        // Pendiente
+        // Verificar que no exista otro ticket abierto del mismo registro.
+
+		$response = $this->ticketRepository->create($request->only('record_id', 'user_id', 'comments'));
+
+        if (! $response) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['ticket' => '¡Error creando la solicitud de cambio!']);
+		}
+
+		return redirect()->route('summary', ['userName' => 'ivan.iglesias', 'aggregate' => 'record']);
+	}
 }

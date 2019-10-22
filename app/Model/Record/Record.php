@@ -40,13 +40,21 @@ class Record extends Model
     public function user()
     {
         return $this->belongsTo(\App\User::class);
+	}
+
+	/**
+     * Get the project that owns the record.
+     */
+    public function project()
+    {
+        return $this->belongsTo(\App\Model\Project\Project::class);
     }
 
     /**
-     * Get the ticket record associated with the record.
+     * Get the ticket records associated with the record.
      */
     public function ticket()
     {
-        return $this->hasOne(\App\Model\Ticket\Ticket::class);
+        return $this->hasMany(\App\Model\Ticket\Ticket::class);
     }
 }

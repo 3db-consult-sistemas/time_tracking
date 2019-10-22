@@ -13,8 +13,6 @@
 			<div class="col-xs-12 col-sm-7">
 				<div class="form-group">
 					<select name="project" id="select-change-project" class="form-control input-sm"  onchange="toggleButton();">
-
-					<option value="-1">NA (temporal)</option>
 						@foreach($projects as $project)
 							<option value="{{ $project->id }}" {{ $project->id == (isset($lastRecord) ? $lastRecord->project_id : -1) ? 'selected' : '' }}>{{ $project->name }}</option>
 						@endforeach

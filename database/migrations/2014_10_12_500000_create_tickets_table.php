@@ -17,12 +17,10 @@ class CreateTicketsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('record_id');
-            $table->unsignedInteger('closed_by_id')->nullable();
+            $table->unsignedInteger('closed_by_id');
             $table->enum('status', ['open', 'close'])->default('open');
-            $table->string('comments')->nullable();
+            $table->string('comments');
             $table->timestamps();
-
-            $table->unique(['user_id', 'record_id']);
 
             $table->foreign('user_id')
                 ->references('id')

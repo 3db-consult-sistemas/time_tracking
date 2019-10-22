@@ -18,7 +18,23 @@ trait Helpers
         if ($date == null) return null;
 
         return Carbon::createFromFormat($format, $date);
-	}
+    }
+
+    /**
+     * Añado los segundos a un string fecha hora sin segundos.
+     *  2019-07-10 11:13 > 2019-07-10 11:13:00
+     *
+     * @param  $string
+     * @return $string
+     */
+    public function addSeconds(string $dateTime)
+    {
+        if ($dateTime == null) return null;
+
+        return strlen($dateTime) == 16
+            ? $dateTime . ":00"
+            : $dateTime;
+    }
 
 	/**
      * Obtengo el numero de segundos de la hora dada en uno de los siguientes formatos: "H:m:s", "H:m", "H".

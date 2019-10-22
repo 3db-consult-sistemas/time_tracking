@@ -34,7 +34,7 @@
                     <td><input name="tuesday" type="number" class="form-control" value="{{ old('tuesday', 480) }}" autocomplete="off" min="0" max="600"></td>
                     <td><input name="wednesday" type="number" class="form-control" value="{{ old('wednesday', 480) }}" autocomplete="off" min="0" max="600"></td>
                     <td><input name="thursday" type="number" class="form-control" value="{{ old('thursday', 480) }}" autocomplete="off" min="0" max="600"></td>
-                    <td><input name="friday" type="number" class="form-control" value="{{ old('friday', 480) }}" autocomplete="off" min="0" max="600"></td>
+                    <td><input name="friday" type="number" class="form-control" value="{{ old('friday', 420) }}" autocomplete="off" min="0" max="600"></td>
                     <td><input name="saturday" type="number" class="form-control" value="{{ old('saturday', 0) }}" autocomplete="off" min="0" max="600"></td>
                     <td><input name="sunday" type="number" class="form-control" value="{{ old('sunday', 0) }}" autocomplete="off" min="0" max="600"></td>
                 </tr>

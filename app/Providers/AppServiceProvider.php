@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Validator;
 use App\Model\Ticket\Ticket;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
@@ -18,9 +19,10 @@ class AppServiceProvider extends ServiceProvider
         // Localization Carbon
         \Carbon\Carbon::setLocale(config('app.locale'));
 
-        // Default string length
+        // Logintud maxima de un string
         Schema::defaultStringLength(191);
 
+		// Variable que contiene el numero de tickets abiertos
         \View::composer([
             'home.index',
             'summary.index',
@@ -31,7 +33,19 @@ class AppServiceProvider extends ServiceProvider
             'help.index'
         ], function($view) {
             $view->with('openTickets', Ticket::where('status', 'open')->count());
-        });
+		});
+
+		// Para validar fecha con multiples formatos
+		Validator::extend('date_format_multi', function($attribute, $value, $formats)
+		{
+			foreach($formats as $format) {
+				$parsed = date_parse_from_format($format, $value);
+				if ($parsed['error_count'] === 0 && $parsed['warning_count'] === 0) {
+					return true;
+				}
+			}
+			return false;
+		});
     }
 
     /**

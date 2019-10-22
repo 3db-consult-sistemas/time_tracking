@@ -47,8 +47,8 @@ class RecordsController extends Controller
             $entries = $this->recordRepository->fetch($data);
 		}
 
+        // dd($entries->toArray());
         return view('summary.index', compact('data', 'users', 'entries'));
-
     }
 
     /**
@@ -96,8 +96,9 @@ class RecordsController extends Controller
 		return redirect()->route('home');
 	}
 
-
-
+	/**
+	 * Cambio de proyecto si estoy en check-in.
+	 */
     public function changeProject(Request $request, $entryId)
     {
         $validator = Validator::make($request->all(), [
@@ -122,8 +123,6 @@ class RecordsController extends Controller
 		return redirect()->route('home');
 	}
 
-
-
     /**
      * Create or finish absence time entry.
      *
@@ -137,5 +136,5 @@ class RecordsController extends Controller
         $this->recordRepository->absence($data);
 
         return redirect()->route('home');
-    }
+	}
 }

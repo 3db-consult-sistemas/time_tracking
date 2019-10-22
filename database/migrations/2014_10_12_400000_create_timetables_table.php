@@ -39,7 +39,7 @@ class CreateTimetablesTable extends Migration
                 INSERT INTO timetables
                 (user_id, from_date, monday, tuesday, wednesday, thursday, friday)
                 VALUES
-                (NEW.id, SYSDATE(), 29700, 29700, 29700, 29700, 25200);
+                (NEW.id, SYSDATE(), 28800, 28800, 28800, 28800, 25200);
             END');
     }
 

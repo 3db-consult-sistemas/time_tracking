@@ -23,7 +23,7 @@ Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/summary', 'RecordsController@index');
+Route::get('/summary', 'RecordsController@index')->name('summary');
 Route::post('/check-in', 'RecordsController@checkIn');
 Route::patch('/check-out/{entryId}', 'RecordsController@checkOut');
 Route::patch('/change-project/{entryId}', 'RecordsController@changeProject');
@@ -34,6 +34,8 @@ Route::get('/download/{year}', 'ReportsController@download')->name('download');
 Route::get('/tickets', 'TicketsController@index');
 Route::get('/tickets/{ticket}/edit', 'TicketsController@edit')->name('tickets.edit');
 Route::patch('/tickets/{ticket}', 'TicketsController@update');
+Route::get('/tickets/create/{entryId}', 'TicketsController@create');
+Route::post('/tickets', 'TicketsController@store');
 
 Route::get('/users', 'UsersController@index');
 Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');

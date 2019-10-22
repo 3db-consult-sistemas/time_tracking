@@ -39,7 +39,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         $user = factory(App\User::class)->create([
-            'username'  => 'regular.user.disable',
+            'username'  => 'regular.user.disabled',
             'name'  => 'Regular User Disabled',
             'email' => 'user.disabled@3dbconsult.com',
             'enabled' => false

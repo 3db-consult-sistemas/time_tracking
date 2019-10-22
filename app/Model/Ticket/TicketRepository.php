@@ -57,7 +57,9 @@ class TicketRepository
     public function closeTicket(Ticket $ticket, $data)
     {
         $record = $ticket->record;
-		$record->check_out = $this->toCarbon($data->get('check_out'));
+        $record->project_id =$data->get('project');
+        $record->check_in = $this->addSeconds($data->get('check_in'));
+        $record->check_out = $this->addSeconds($data->get('check_out'));
 		$record->night_shift = NightShift::getTimeInSeconds($record->check_in, $record->check_out);
         $record->save();
 
@@ -65,6 +67,14 @@ class TicketRepository
         $ticket->status = 'close';
         $ticket->closed_by_id = auth()->id();
         $ticket->save();
+	}
+
+    /**
+     * Creo un nuevo ticket para modificar un registro.
+     */
+	public function create(array $data)
+	{
+		return $this->getModel()->create($data);
     }
 }
 

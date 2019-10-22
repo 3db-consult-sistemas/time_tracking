@@ -13,13 +13,9 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-
                     @include('tickets.filter')
-
                     <h3 class="panel-title" style="margin-top:.4em;">Tickets</h3>
-
                     <div class="clearfix"></div>
-
                 </div>
 
                 <div class="panel-body">

@@ -38,6 +38,26 @@ class RecordRepository
 	}
 
     /**
+     * Compruebo si el el check in/out a establecer al cerrar el ticket no entra en
+     * conflicto con otro periodo temporal de otro registro.
+     *
+     * @param $userId
+     * @param $checkIn
+     * @param $checkOut
+     * @return void
+     */
+    public function timeRangeIsOk($userId, $checkIn, $checkOut)
+    {
+        $query = "SELECT * FROM records WHERE user_id = {$userId} AND (
+                    ('{$checkIn}' > check_in AND '{$checkIn}' < check_out) OR
+                    ('{ $checkOut}' > check_in AND '{ $checkOut}' < check_out))";
+
+        return count(DB::select(DB::raw($query))) > 0
+            ? false
+            : true;
+    }
+
+    /**
      * Obtengo el estado actual del usuario.
      *
      * @param $userId
@@ -187,6 +207,29 @@ class RecordRepository
         });
 	}
 
+	/**
+     * Fetch record by ID.
+     *
+     * @param $action
+     * @return array
+     */
+    public function fetchById($id)
+    {
+		return $this->getModel()
+			->leftJoin('projects', 'projects.id', '=', 'records.project_id')
+			->where('records.id', $id)
+			->select([
+				'records.id',
+				'records.user_id',
+				'check_in',
+				'check_out',
+				'projects.name as project',
+				'type',
+				'comments'
+			])
+			->first();
+	}
+
     /**
      * Fetch data.
      *
@@ -297,12 +340,18 @@ class RecordRepository
     public function fetchPaginate($data)
     {
         return $this->getModel()
+            ->leftJoin('tickets', function ($join) {
+                $join->on('records.id', '=', 'tickets.record_id')
+                     ->where('tickets.status', 'open');
+            })
 			->join('users', 'users.id', '=', 'records.user_id')
 			->leftJoin('projects', 'projects.id', '=', 'records.project_id')
             ->where('records.user_id', $data['userId'])
             ->select([
+				'records.id',
                 'users.name',
                 'records.type',
+                'tickets.status',
                 DB::raw("DATE(records.check_in) as date"),
                 DB::raw("TIME(records.check_in) as time_in"),
                 DB::raw("TIME(records.check_out) as time_out"),
