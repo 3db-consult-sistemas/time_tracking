@@ -25,7 +25,8 @@ class TicketsController extends Controller
         $this->ticketRepository = $ticketRepository;
         $this->userRepository = $userRepository;
 
-        $this->middleware(['auth', 'ismobile', 'checkrole:super_admin,admin']);
+        $this->middleware(['auth', 'ismobile']);
+        $this->middleware('checkrole:super_admin,admin')->except(['create', 'store']);
     }
 
     /**
