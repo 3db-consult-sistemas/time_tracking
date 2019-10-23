@@ -17,7 +17,7 @@ class ProjectsTableSeeder extends Seeder
         $faker = Faker::create();
 
         // Añado los proyectos
-        // 1 - Main, 2 - Main by ticket, 3 - Disabled, 4 - Project
+        // 1 - Todos, 2 - Mediante ticket, 3 - Deshabilitado, 4 - Habilitado
         $data = [
 			[ 'name' => 'Vacaciones', 'status' => 2 ],
 			[ 'name' => 'Baja', 'status' => 2 ],

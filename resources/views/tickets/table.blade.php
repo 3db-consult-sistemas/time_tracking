@@ -23,7 +23,7 @@
                         <td><a href="{{ url('/summary?userName=' . $ticket->user->username . '&amp;aggregate=day') }}">{{ $ticket->user->name }}</a></td>
                         <td>{{ $ticket->record->type }}</td>
                         <td>{{ $ticket->record->check_in }}</td>
-                       <td>{{ $ticket->closedBy->name ?? '-' }}</td>
+                        <td>{{ $ticket->closedBy->name ?? '-' }}</td>
                         <td><a class="btn btn-default btn-block btn-sm"
                             style="padding: 2px 10px;"
                             href="{{ route('tickets.edit', $ticket) }}">Detalles</a></td>

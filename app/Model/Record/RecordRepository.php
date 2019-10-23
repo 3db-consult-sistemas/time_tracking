@@ -23,7 +23,7 @@ class RecordRepository
     }
 
     /**
-     * Obtengo el ultimo registro del usuario.
+     * Obtengo el ultimo registro de usuario descartando los registros generados por ticket futuros.
      *
      * @param $userId
      * @return void
@@ -32,14 +32,14 @@ class RecordRepository
     {
 		return $this->getModel()
 			->leftJoin('projects', 'records.project_id', '=', 'projects.id')
-			->where('user_id', $userId)
-			->orderBy('records.id', 'desc')
+            ->where('user_id', $userId)
+            ->where('check_in', '<=',  Carbon::now())
+            ->orderBy('records.id', 'desc')
 			->first();
 	}
 
     /**
-     * Compruebo si el el check in/out a establecer al cerrar el ticket no entra en
-     * conflicto con otro periodo temporal de otro registro.
+     * Compruebo si el check in-out no se encuentran dentro de un periordo temporal de un registro.
      *
      * @param $userId
      * @param $checkIn
@@ -83,7 +83,7 @@ class RecordRepository
 
     /**
      * Obtengo los registros activos comprobando que el campo 'check_out' este a null o la
-     * fecha actual se encuetre entre 'check_in' y 'check_out',
+     * fecha actual se encuentre entre 'check_in' y 'check_out',
      *
      * @param $id
      * @return void

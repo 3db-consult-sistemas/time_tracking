@@ -47,7 +47,6 @@ class RecordsController extends Controller
             $entries = $this->recordRepository->fetch($data);
 		}
 
-        // dd($entries->toArray());
         return view('summary.index', compact('data', 'users', 'entries'));
     }
 
@@ -124,7 +123,7 @@ class RecordsController extends Controller
 	}
 
     /**
-     * Create or finish absence time entry.
+     * Creo o finalizo un registro de ausencia.
      *
      * @param  $entryId
      * @return redirect

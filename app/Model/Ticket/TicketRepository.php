@@ -33,7 +33,7 @@ class TicketRepository
                 ->join('users', 'users.id', '=', 'tickets.user_id')
                 ->where('users.username', $data['userName'])
                 ->select('tickets.id', 'tickets.user_id', 'tickets.record_id', 'tickets.closed_by_id', 'tickets.status', 'tickets.comments')
-                ->with('record', 'user')
+                ->with('record', 'user', 'closedBy')
                 ->orderBy('status')
                 ->orderBy('tickets.created_at', 'desc')
                 ->paginate(config('options.paginate_number_items'))
@@ -41,7 +41,7 @@ class TicketRepository
         }
 
         return $this->getModel()
-            ->with('record', 'user')
+            ->with('record', 'user', 'closedBy')
             ->orderBy('status')
             ->latest()
             ->paginate(config('options.paginate_number_items'));

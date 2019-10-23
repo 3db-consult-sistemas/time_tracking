@@ -16,7 +16,7 @@ class CreateProjectsTable extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->increments('id');
 			$table->string('name');
-			$table->enum('status', [1, 2, 3, 4])->default(4); // 1 - Main, 2 - Main by ticket, 3 - Disabled, 4 - Project
+			$table->enum('status', [1, 2, 3, 4])->default(4); // 1 - Todos, 2 - Mediante ticket, 3 - Deshabilitado, 4 - Habilitado
         });
 
         Schema::create('project_user', function (Blueprint $table) {
