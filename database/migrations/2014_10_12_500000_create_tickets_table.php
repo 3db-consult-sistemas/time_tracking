@@ -16,8 +16,9 @@ class CreateTicketsTable extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedInteger('record_id');
-            $table->unsignedInteger('closed_by_id');
+            $table->unsignedInteger('record_id')->nullable();
+            $table->unsignedInteger('closed_by_id')->nullable();
+            $table->enum('type', ['request', 'update_record', 'auto'])->default('auto');
             $table->enum('status', ['open', 'close'])->default('open');
             $table->string('comments');
             $table->timestamps();

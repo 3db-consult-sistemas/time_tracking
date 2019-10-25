@@ -13,7 +13,11 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    @include('tickets.filter')
+
+                    @if(! is_null($users))
+                        @include('tickets.filter')
+                    @endif
+
                     <h3 class="panel-title" style="margin-top:.4em;">Tickets</h3>
                     <div class="clearfix"></div>
                 </div>

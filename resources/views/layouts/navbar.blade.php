@@ -21,14 +21,14 @@
             <ul class="nav navbar-nav hidden-xs">
                 @auth
                     <li><a href="{{ url('/summary') }}">Resumen</a></li>
+
+                    @if (isset($openTickets) && $openTickets > 0)
+                        <li><a href="{{ url('/tickets') }}">Tickets <span class="badge">{{ $openTickets }}</span></a></li>
+                    @else
+                        <li><a href="{{ url('/tickets') }}">Tickets</a></li>
+                    @endif
+
                     @if(Gate::check('checkrole', 'super_admin') || Gate::check('checkrole', 'admin'))
-
-                        @if (isset($openTickets) && $openTickets > 0)
-                            <li><a href="{{ url('/tickets') }}">Tickets <span class="badge">{{ $openTickets }}</span></a></li>
-                        @else
-                            <li><a href="{{ url('/tickets') }}">Tickets</a></li>
-                        @endif
-
                         <li><a href="{{ url('/users') }}">Usuarios</a></li>
                     @endif
                 @endauth

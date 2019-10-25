@@ -32,10 +32,12 @@ Route::post('/absence/{entryId}', 'RecordsController@absence');
 Route::get('/download/{year}', 'ReportsController@download')->name('download');
 
 Route::get('/tickets', 'TicketsController@index');
+Route::get('/tickets/{ticket}', 'TicketsController@show')->name('tickets.show');
 Route::get('/tickets/{ticket}/edit', 'TicketsController@edit')->name('tickets.edit');
-Route::patch('/tickets/{ticket}', 'TicketsController@update');
+Route::patch('/tickets/{ticket}/{action}', 'TicketsController@update')->name('tickets');
 Route::get('/tickets/create/{entryId}', 'TicketsController@create');
 Route::post('/tickets', 'TicketsController@store');
+Route::delete('/tickets/{id}', 'TicketsController@destroy');
 
 Route::get('/users', 'UsersController@index');
 Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');

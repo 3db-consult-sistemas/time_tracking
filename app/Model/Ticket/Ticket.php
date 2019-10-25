@@ -24,7 +24,7 @@ class Ticket extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'record_id', 'closed_by_id', 'status', 'comments',
+        'user_id', 'record_id', 'closed_by_id', 'type', 'status', 'comments',
     ];
 
     /**

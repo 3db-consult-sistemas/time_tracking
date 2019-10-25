@@ -30,13 +30,13 @@ class TicketsTableSeeder extends Seeder
         {
             $status = 'open';
             $closedBy = null;
-            $comments = null;
+            $comments = 'Check out no realizado.';
+            // $comments = $faker->sentence($nbWords = 6, $variableNbWords = true);
 
-            if ($faker->boolean(0))
+            if ($faker->boolean(50))
             {
                 $status = 'close';
                 $closedBy = $admin->id;
-                $comments = $faker->sentence($nbWords = 6, $variableNbWords = true);
             }
 
             Ticket::create([

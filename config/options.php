@@ -112,4 +112,19 @@ return [
 
     'paginate_number_items' => 17,
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Ticket options
+    |--------------------------------------------------------------------------
+    |
+    | Tipos de ticket admitidos.
+    |
+    */
+
+    'ticket_options' => [
+        'request' => 'solicitud',
+        'update_record' => 'actualizar registro',
+        'auto' => 'automático',
+    ],
 ];

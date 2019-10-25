@@ -63,14 +63,16 @@ class User extends Authenticatable
 	/**
 	 * Proyectos a los que el usuario puede reportar.
 	 */
-    public function availableProjects()
+    public function availableProjects($allProjects = False)
     {
-		$userId = $this->id;
+        $userId = $this->id;
+
+        $where = $allProjects ? " or status='1'" : '';
 
 		$query = "SELECT id, status, name FROM project_user AS pu
 				JOIN projects AS p ON p.id = pu.project_id WHERE pu.user_id = {$userId}
-				UNION (SELECT id, status, name FROM projects WHERE status=1)
-				ORDER BY status, name";
+				UNION (SELECT id, status, name FROM projects WHERE status='2' {$where})
+                ORDER BY status, name";
 
 		return DB::select(DB::raw($query));
     }

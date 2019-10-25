@@ -32,7 +32,7 @@ class TicketRepository
             return $this->getModel()
                 ->join('users', 'users.id', '=', 'tickets.user_id')
                 ->where('users.username', $data['userName'])
-                ->select('tickets.id', 'tickets.user_id', 'tickets.record_id', 'tickets.closed_by_id', 'tickets.status', 'tickets.comments')
+                ->select('tickets.id', 'tickets.user_id', 'tickets.record_id', 'tickets.closed_by_id', 'tickets.status', 'tickets.type', 'tickets.comments')
                 ->with('record', 'user', 'closedBy')
                 ->orderBy('status')
                 ->orderBy('tickets.created_at', 'desc')
@@ -48,13 +48,34 @@ class TicketRepository
     }
 
     /**
+     * Creo un nuevo ticket para modificar un registro.
+     */
+	public function create(array $data)
+	{
+		return $this->getModel()->create($data);
+    }
+
+    /**
+     * Actualizo el ticket.
+     *
+     * @param Ticket $ticket
+     * @param Request $data
+     * @return void
+     */
+    public function update(Ticket $ticket, $data)
+    {
+        $ticket->comments = $data->get('comments');
+        $ticket->save();
+    }
+
+    /**
      * Cierro el ticket.
      *
      * @param Ticket $ticket
      * @param Request $data
      * @return void
      */
-    public function closeTicket(Ticket $ticket, $data)
+    public function close(Ticket $ticket, $data)
     {
         $record = $ticket->record;
         $record->project_id =$data->get('project');
@@ -67,14 +88,27 @@ class TicketRepository
         $ticket->status = 'close';
         $ticket->closed_by_id = auth()->id();
         $ticket->save();
-	}
+    }
 
     /**
-     * Creo un nuevo ticket para modificar un registro.
+     * Elimino el ticket.
+     *
+     * @param $data
+     * @return boolean
      */
-	public function create(array $data)
-	{
-		return $this->getModel()->create($data);
+    public function delete($id)
+    {
+        $ticket = $this->getModel()->find($id);
+
+        if (is_null($ticket)) {
+            return false;
+        }
+
+        if ($ticket->status == 'close') {
+            return false;
+        }
+
+        return $ticket->delete();
     }
 }
 

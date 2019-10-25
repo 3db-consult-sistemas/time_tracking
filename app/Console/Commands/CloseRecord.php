@@ -54,7 +54,6 @@ class CloseRecord extends Command
             }
 
             $record->ticket()->create(['user_id' => $record->user_id, 'comments' => 'Check out no realizado.']);
-
             $record->check_out = $now;
             $record->save();
         }

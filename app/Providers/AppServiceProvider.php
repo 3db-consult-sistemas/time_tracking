@@ -32,7 +32,15 @@ class AppServiceProvider extends ServiceProvider
             'users.edit',
             'help.index'
         ], function($view) {
-            $view->with('openTickets', Ticket::where('status', 'open')->count());
+            if (auth()->user()->role == 'user') {
+                $view->with('openTickets', Ticket::where('status', 'open')
+                    ->where('user_id', auth()->id())
+                    ->count()
+                );
+            }
+            else {
+                $view->with('openTickets', Ticket::where('status', 'open')->count());
+            }
 		});
 
 		// Para validar fecha con multiples formatos

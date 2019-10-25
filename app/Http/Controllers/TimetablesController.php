@@ -44,7 +44,7 @@ class TimetablesController extends Controller
     }
 
     /**
-     * Creo un nuevo horario.
+     * Elimino un horario.
      *
      * @return \Illuminate\Http\Response
      */

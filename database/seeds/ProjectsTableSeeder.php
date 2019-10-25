@@ -17,21 +17,21 @@ class ProjectsTableSeeder extends Seeder
         $faker = Faker::create();
 
         // Añado los proyectos
-        // 1 - Todos, 2 - Mediante ticket, 3 - Deshabilitado, 4 - Habilitado
+        // 1 - Mediante ticket, 2 - Todos, 3 - Deshabilitado, 4 - Habilitado
         $data = [
-			[ 'name' => 'Vacaciones', 'status' => 2 ],
-			[ 'name' => 'Baja', 'status' => 2 ],
-			[ 'name' => 'Formación - En puesto', 'status' => 1 ],
-            [ 'name' => 'Formación - Curso', 'status' => 1 ],
-			[ 'name' => 'Formación - Desarrollos', 'status' => 1 ],
+			[ 'name' => 'Vacaciones', 'status' => 1 ],
+			[ 'name' => 'Baja', 'status' => 1 ],
+			[ 'name' => 'Formación [En puesto]', 'status' => 2 ],
+            [ 'name' => 'Formación [Curso]', 'status' => 2 ],
+			[ 'name' => 'Formación [Desarrollos]', 'status' => 2 ],
 			[ 'name' => 'Comité', 'status' => 4 ],
 			[ 'name' => 'Igualdad', 'status' => 4 ],
 			[ 'name' => 'Gerencia', 'status' => 4 ],
 			[ 'name' => 'Sistemas', 'status' => 4 ],
 
-            [ 'name' => 'RANEVO - Diseño', 'status' => 3 ],
-            [ 'name' => 'RANEVO - IT', 'status' => 4 ],
-            [ 'name' => 'RANEVO - OPT', 'status' => 4 ],
+            [ 'name' => 'RANEVO [Diseño]', 'status' => 3 ],
+            [ 'name' => 'RANEVO [IT]', 'status' => 4 ],
+            [ 'name' => 'RANEVO [OPT]', 'status' => 4 ],
             [ 'name' => 'ANE - Diseño', 'status' => 4 ],
             [ 'name' => 'ANE - IT', 'status' => 3 ]
         ];

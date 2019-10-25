@@ -10,6 +10,7 @@
                 <th>Hora Final</th>
                 <th>Tiempo</th>
 				<th>Ticket</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -23,11 +24,18 @@
                     <td>{{ $entry->time_out }}</td>
                     <td>{{ Helpers::formatSeconds($entry->secs) }}</td>
 
-                    @if ($entry->status == 'open')
-                        <td><span class="label label-success }}">Abierto</span></td>
+                    @if ($entry->ticket_status == 'open')
+                        <td>
+                            <a href="{{ route('tickets.edit', $entry->ticket_id) }}">Editar</a>
+                        </td>
+                        <td>
+                            <span class="label label-success }}">Abierto</span>
+                        </td>
 					@elseif ($entry->time_out != null)
 						<td><a href="{{ url('/tickets/create', $entry->id) }}">Nuevo</a></td>
+                        <td></td>
                     @else
+                        <td></td>
                         <td></td>
 					@endif
                 </tr>
