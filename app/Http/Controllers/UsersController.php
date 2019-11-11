@@ -52,7 +52,7 @@ class UsersController extends Controller
      */
     public function edit(User $user)
     {
-		$projects = Project::where('status', 4)->orderBy('name')->get();
+		$projects = Project::where('status', '4')->orderBy('name')->get();
 
         return view('users.edit', compact('user', 'projects'));
     }
