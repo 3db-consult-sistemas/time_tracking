@@ -49,7 +49,8 @@ class CloseRecord extends Command
                 continue;
             }
 
-            if (! is_null($record->ticket)) {
+            // Solo pasa si es igual a 0, ya que no se pueden crear solicitudes hasta que el ticket este cerrado.
+            if (count($record->ticket) > 0) {
                 continue;
             }
 
